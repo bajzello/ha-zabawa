@@ -1,18 +1,17 @@
 build_ci:
   automation:
-    - alias: System Travis Build Status
+    - alias: System Travis Build Failed
       trigger:
         - platform: state
           entity_id: sensor.travis_build_status
           from: "started"
           to: "failed"
       action:
-        - service: notify.notify
+        - service: persistent_notification.create
           data_template:
+            title: Travis build status
             message: >
               Travis build failed! {{ "\uD83E\uDD2C" }}
-            data:
-              url: https://travis-ci.org/bajzello/ha-zabawa
 
     - alias: System Travis Build Passed
       trigger:
@@ -21,12 +20,11 @@ build_ci:
           from: "started"
           to: "passed"
       action:
-        - service: notify.notify
+        - service: persistent_notification.create
           data_template:
+            title: Travis build status
             message: >
               Travis build passed! {{ "\uD83D\uDC4D" }}
-            data:
-              url: https://travis-ci.org/bajzello/ha-zabawa
         # - service: hassio.addon_start
         #   data:
         #     addon: core_git_pull

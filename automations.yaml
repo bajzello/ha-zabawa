@@ -1,3 +1,13 @@
+# - alias: "PLAYGROUND AUTOMATION"
+#   trigger:
+#     platform: time_pattern
+#     hours: "/99999"
+#   action:
+#     service: persistent_notification.create
+#     data:
+#       message: "Your message goes here"
+#       title: "Custom subject"
+
 - alias: "Playroom Air Quality"
   trigger:
     platform: time_pattern
