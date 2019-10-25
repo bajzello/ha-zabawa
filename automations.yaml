@@ -1,0 +1,411 @@
+- alias: "Playroom Air Quality"
+  trigger:
+    platform: time_pattern
+    #TODO: extract as param time interval and share for all air purifiers
+    # You can also match on interval. This will match every 1 minute
+    minutes: "/15"
+    #seconds: "/15"
+  action:
+    - service: system_log.write
+      data_template:
+        message: >-
+            {{ '[Playroom-NEEEEW] AQI: ' + states.sensor.xiaomi_pro_aqi.state }}
+        level: warning
+
+    - service_template: >
+        {% if states.sensor.xiaomi_pro_aqi.state | float > states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.playroom_xiaomi', 'off') %}
+            fan.turn_on
+        {% elif states('sensor.xiaomi_air_monitor_living_room') | float < states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.playroom_xiaomi', 'on') %}
+            fan.turn_off
+        {% else %}
+            fan.xiaomi_miio_set_child_lock_on
+        {% endif %}
+      entity_id: 'fan.playroom_xiaomi'
+
+- alias: "[OLD] Playroom: AQI below 20"
+  trigger:
+    platform: time_pattern
+    #TODO: extract as param time interval and share for all air purifiers
+    # You can also match on interval. This will match every 1 minute
+    minutes: "/15"
+  condition:
+    condition: or
+    conditions:
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: 'fan.playroom_xiaomi'
+              state: 'on'
+            - condition: numeric_state
+              entity_id: 'sensor.xiaomi_pro_aqi'
+              below: 20
+        
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: 'fan.playroom_xiaomi'
+              state: 'off'
+            - condition: numeric_state
+              entity_id: 'sensor.xiaomi_pro_aqi'
+              above: 20
+  action:
+    - service_template: >
+        {% if states.sensor.xiaomi_pro_aqi.state | float > 20 %}
+            fan.turn_on
+        {% else %}
+            fan.turn_off
+        {% endif %}
+      entity_id: 'fan.playroom_xiaomi'
+
+- alias: "Garage: AQI below 20"
+  trigger:
+    platform: time_pattern
+    #TODO: extract as param time interval and share for all air purifiers
+    # You can also match on interval. This will match every 1 minute
+    minutes: "/15"
+  condition:
+    condition: or
+    conditions:
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: 'fan.garage_xiaomi'
+              state: 'on'
+            - condition: numeric_state
+              entity_id: 'sensor.xiaomi_garage_aqi'
+              below: 20
+        
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: 'fan.garage_xiaomi'
+              state: 'off'
+            - condition: numeric_state
+              entity_id: 'sensor.xiaomi_garage_aqi'
+              above: 20
+  action:
+    - service_template: >
+        {% if states.sensor.xiaomi_garage_aqi.state | float > 20 %}
+            fan.turn_on
+        {% else %}
+            fan.turn_off
+        {% endif %}
+      entity_id: 'fan.garage_xiaomi'
+        
+- alias: "Bedroom: AQI below 20"
+  trigger:
+    platform: time_pattern
+    #TODO: extract as param time interval and share for all air purifiers
+    # You can also match on interval. This will match every 1 minute
+    minutes: "/15"
+  condition:
+    condition: or
+    conditions:
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: 'fan.bedroom_xiaomi'
+              state: 'on'
+            - condition: numeric_state
+              entity_id: 'sensor.xiaomi_bedroom_aqi'
+              below: 20
+        
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: 'fan.bedroom_xiaomi'
+              state: 'off'
+            - condition: numeric_state
+              entity_id: 'sensor.xiaomi_bedroom_aqi'
+              above: 20
+  action:
+    - service_template: >
+        {% if states.sensor.xiaomi_bedroom_aqi.state | float > 20 %}
+            fan.turn_on
+        {% else %}
+            fan.turn_off
+        {% endif %}
+      entity_id: 'fan.bedroom_xiaomi'
+        
+- alias: "Kidsroom: AQI below 20"
+  trigger:
+    platform: time_pattern
+    #TODO: extract as param time interval and share for all air purifiers
+    # You can also match on interval. This will match every 1 minute
+    minutes: "/15"
+  condition:
+    condition: or
+    conditions:
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: 'fan.kidsroom_xiaomi'
+              state: 'on'
+            - condition: numeric_state
+              entity_id: 'sensor.xiaomi_kidsroom_aqi'
+              below: 20
+        
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: 'fan.kidsroom_xiaomi'
+              state: 'off'
+            - condition: numeric_state
+              entity_id: 'sensor.xiaomi_kidsroom_aqi'
+              above: 20
+  action:
+    - service_template: >
+        {% if states.sensor.xiaomi_kidsroom_aqi.state | float > 20 %}
+            fan.turn_on
+        {% else %}
+            fan.turn_off
+        {% endif %}
+      entity_id: 'fan.kidsroom_xiaomi'
+        
+- alias: "Upstairs: Humidity 45-55%"
+  trigger:
+    platform: time_pattern
+    #TODO: extract as param time interval and share for all air purifiers
+    # You can also match on interval. This will match every 1 minute
+    minutes: "/15"
+  condition:
+    condition: or
+    conditions:
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: 'switch.nawilzacz'
+              state: 'off'
+            - condition: numeric_state
+              entity_id: 'sensor.humidity_158d0002b6ca82'
+              below: 45
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: 'switch.nawilzacz'
+              state: 'on'
+            - condition: numeric_state
+              entity_id: 'sensor.humidity_158d0002b6ca82'
+              above: 55
+  action:
+    service: switch.toggle
+    data:
+        entity_id: switch.nawilzacz
+
+# this script assumes that if humidifier is on it will be off by separate humidify script - that way they can be turned on and off separately
+# so it does not change state from Humidify and the same should be done on Humidify script later on
+
+- alias: "Living Room: Air Quality"
+  trigger:
+    platform: time_pattern
+    # 16 not 15 minutes to not sync up with humidify checking  on the sane device
+    minutes: "/16"
+  action:
+    # condition preventing from IF or ELSE IF below not being true so that there is not need for ELSE which would do nothing
+    - condition: or
+      conditions:
+        - condition: and
+          conditions:
+            - condition: numeric_state
+              entity_id: 'sensor.xiaomi_air_monitor_living_room'
+              above: 20
+            - condition: state
+              entity_id: 'input_select.sharp_mode'
+              state: "Off"
+        - condition: and
+          conditions:
+            - condition: numeric_state
+              entity_id: 'sensor.xiaomi_air_monitor_living_room'
+              below: 20
+            - condition: state
+              entity_id: 'input_select.sharp_mode'
+              state: "Clean"
+  
+    - service: script.turn_on
+      data_template:
+        entity_id: >-
+            {% if states('sensor.xiaomi_air_monitor_living_room') | float > 20 and not is_state('input_select.sharp_mode', 'Humidify') and not is_state('input_select.sharp_mode', 'Clean') %}
+                script.sharp_turn_clean_on
+            {% elif states('sensor.xiaomi_air_monitor_living_room') | float < 20 and is_state('input_select.sharp_mode', 'Clean') %}
+                script.sharp_turn_off
+            {% else %}
+                script.non_existent
+            {% endif %}
+            
+- alias: "Living Room: Humidity"
+  trigger:
+    platform: time_pattern
+    minutes: "/15"
+  action:
+    # condition preventing from IF or ELSE IF below not being true so that there is not need for ELSE which would do nothing
+    - condition: or
+      conditions:
+        - condition: and
+          conditions:
+            - condition: numeric_state
+              entity_id: 'sensor.humidity_158d00027867c3'
+              below: 45
+            - condition: or
+              conditions:
+                - condition: state
+                  entity_id: 'input_select.sharp_mode'
+                  state: "Off"
+                - condition: state
+                  entity_id: 'input_select.sharp_mode'
+                  state: "Clean"
+        - condition: and
+          conditions:
+            - condition: numeric_state
+              entity_id: 'sensor.humidity_158d00027867c3'
+              above: 55
+            - condition: state
+              entity_id: 'input_select.sharp_mode'
+              state: "Humidify"
+    
+    - service: script.turn_on
+      data_template:
+        entity_id: >-
+            {% if states('sensor.humidity_158d00027867c3') | float < 45 and not is_state('input_select.sharp_mode', 'Humidify') %}
+                script.sharp_turn_humidify_on
+            {% elif states('sensor.humidity_158d00027867c3') | float > 55 and is_state('input_select.sharp_mode', 'Humidify') %}
+                script.sharp_turn_off
+            {% else %}
+                script.non_existent
+            {% endif %}
+
+- alias: "Reset Sharp status"
+  trigger:
+    platform: time
+    # Military time format. This trigger will fire at 3:36 AM
+    at: "03:36:00"
+  action:
+    - service: ifttt.trigger
+      data: {"event":"sonoff_off"}
+      
+    # Waits 1 minute
+    - delay: '00:01:00'
+    
+    - service: ifttt.trigger
+      data: {"event":"sonoff_on"}
+      
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.sharp_mode
+        option: "Off"
+        
+    - service: input_select.select_option
+      data:
+        entity_id: input_select.sharp_speed
+        option: "Auto"
+        
+    - service: script.set_sharp_speed_min
+    
+    # without it will execute same time as script above = won't wait until script finishes...
+    
+    - wait_template: "{{ is_state('input_select.sharp_speed', 'Min') }}"
+      timeout: '00:01:00'
+    
+    #Those two below are to set Sharp back to it's proper state
+    
+    #NOTE: Invoking automation like that seems to not check conditions !
+    - service: automation.trigger
+      entity_id: automation.living_room_humidity
+    
+    - delay: '00:00:10'
+      
+    - service: automation.trigger
+      entity_id: automation.living_room_air_quality
+    
+    #Those two below are to set Sharp back to it's proper state
+    
+    #NOTE: Invoking automation like that seems to not check conditions !
+    - service: automation.trigger
+      entity_id: automation.living_room_humidity
+    
+    - delay: '00:00:10'
+      
+    - service: automation.trigger
+      entity_id: automation.living_room_air_quality
+
+- alias: "Calculate if nobody is at home"
+  trigger:
+    platform: state
+    entity_id: device_tracker.google_maps_107747480305280073082, device_tracker.google_maps_102671172042975404481, device_tracker.google_maps_113206223653696792209
+  condition:
+    condition: or
+    conditions:
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: input_boolean.nobody_home
+              state: 'on'
+            - condition: or
+              conditions:
+                - condition: state
+                  entity_id: 'device_tracker.google_maps_107747480305280073082'
+                  state: 'home'
+                - condition: state
+                  entity_id: 'device_tracker.google_maps_102671172042975404481'
+                  state: 'home'
+                - condition: state
+                  entity_id: 'device_tracker.google_maps_113206223653696792209'
+                  state: 'home'
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: input_boolean.nobody_home
+              state: 'off'
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: 'device_tracker.google_maps_107747480305280073082'
+                  state: 'not_home'
+                - condition: state
+                  entity_id: 'device_tracker.google_maps_102671172042975404481'
+                  state: 'not_home'
+                - condition: state
+                  entity_id: 'device_tracker.google_maps_113206223653696792209'
+                  state: 'not_home'
+  action:
+    service: input_boolean.toggle
+    data:
+        entity_id: input_boolean.nobody_home
+    
+- alias: "Keep max clean only when nobody home"
+  initial_state: false
+  trigger:
+    platform: state
+    entity_id: input_boolean.nobody_home
+  condition:
+    condition: or
+    conditions:
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: input_boolean.nobody_home
+              state: 'off'
+            - condition: state
+              entity_id: input_boolean.max_clean
+              state: 'on'
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: input_boolean.nobody_home
+              state: 'on'
+            - condition: state
+              entity_id: input_boolean.max_clean
+              state: 'off'
+  action:
+    - service: system_log.write
+      data_template:
+        message: >-
+            {{ '[AUTO] --- Keep max clean only when nobody home --- nobody_home: ' + states.input_boolean.nobody_home.state}}
+        level: warning
+        
+    - service_template: >
+        {% if is_state('input_boolean.nobody_home', 'on') %}
+            script.turn_on_max_cleaning
+        {% else %}
+            script.turn_off_max_cleaning
+        {% endif %}
+

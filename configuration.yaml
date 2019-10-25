@@ -1,0 +1,176 @@
+
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+# http:
+#   base_url: example.duckdns.org:8123
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+
+device_tracker:
+  - platform: google_maps
+    username: !secret device_tracker_google_maps_username
+
+input_boolean:
+  nobody_home:
+    name: Nikogo nie ma w domu
+    initial: false
+  max_clean:
+    name: Max czyszczenie wlaczone
+    initial: false
+
+input_select:
+  sharp_speed:
+    name: Sharp speed
+    options:
+      - Auto
+      - Pollen
+      - Max
+      - Med
+      - Low
+    initial: Auto
+    
+  sharp_mode:
+    name: Sharp mode
+    options:
+      - "Off"
+      - "Clean"
+      - "Humidify"
+    initial: "Off"
+
+input_number:
+  max_aqi_for_xiaomi:
+    name: Max AQI dla pokoji z Xiaomi
+    initial: 20
+    min: 1
+    max: 60
+
+fan:
+# Xiaomi Air Purifier Pro
+  - platform: xiaomi_miio
+    name: Playroom Xiaomi
+    host: 192.168.1.140
+    token: !secret xiaomi_air_purifier_pro_token
+
+# Xiaomi Air Purifier 2 Garage
+  - platform: xiaomi_miio
+    name: Garage Xiaomi
+    host: 192.168.1.141
+    token: !secret xiaomi_air_purifier_2_garage_token
+    
+# Xiaomi Air Purifier 2S Bedroom
+  - platform: xiaomi_miio
+    name: Bedroom Xiaomi
+    host: 192.168.1.142
+    token: !secret xiaomi_air_purifier_2s_bedroom_token
+    
+# Xiaomi Air Purifier 2S Kids Room
+  - platform: xiaomi_miio
+    name: Kids Room Xiaomi
+    host: 192.168.1.143
+    token: !secret xiaomi_air_purifier_2s_kidsroom_token
+    
+wemo:
+  discovery: false
+  static:
+    - 192.168.1.125
+    
+# You can leave MAC empty if you only have one gateway.
+xiaomi_aqara:
+  discovery_retry: 5
+  gateways:
+    - key: !secret xiaomi_aquara_key
+    
+ifttt:
+  key: !secret ifttt_key
+
+# Sensors
+sensor:
+  - platform: template
+    sensors:
+        #4 oczyszczacze powietrza Xiaomi
+        xiaomi_pro_aqi:
+            friendly_name: "Playroom AQI"
+            value_template: '{{ states.fan.playroom_xiaomi.attributes.aqi|default(0) }}'
+            unit_of_measurement: "AQI"
+        xiaomi_pro_temperature:
+            friendly_name: "Playroom temperature"
+            value_template: '{{ states.fan.playroom_xiaomi.attributes.temperature|default(0) }}'
+            unit_of_measurement: "℃"
+            icon_template: mdi:thermometer
+        xiaomi_pro_humidity:
+            friendly_name: "Playroom humidity"
+            value_template: '{{ states.fan.playroom_xiaomi.attributes.humidity|default(0) }}'
+            unit_of_measurement: "%"
+        
+        xiaomi_garage_aqi:
+            friendly_name: "Garage AQI"
+            value_template: '{{ states.fan.garage_xiaomi.attributes.aqi|default(0) }}'
+            unit_of_measurement: "AQI"
+        xiaomi_garage_temperature:
+            friendly_name: "Garage temperature"
+            value_template: '{{ states.fan.garage_xiaomi.attributes.temperature|default(0) }}'
+            unit_of_measurement: "℃"
+            icon_template: mdi:thermometer
+        xiaomi_garage_humidity:
+            friendly_name: "Garage humidity"
+            value_template: '{{ states.fan.garage_xiaomi.attributes.humidity|default(0) }}'
+            unit_of_measurement: "%"
+            
+        xiaomi_bedroom_aqi:
+            friendly_name: "Bedroom AQI"
+            value_template: '{{ states.fan.bedroom_xiaomi.attributes.aqi|default(0) }}'
+            unit_of_measurement: "AQI"
+        xiaomi_bedroom_temperature:
+            friendly_name: "Bedroom temperature"
+            value_template: '{{ states.fan.bedroom_xiaomi.attributes.temperature|default(0) }}'
+            unit_of_measurement: "℃"
+            icon_template: mdi:thermometer
+        xiaomi_bedroom_humidity:
+            friendly_name: "Bedroom humidity"
+            value_template: '{{ states.fan.bedroom_xiaomi.attributes.humidity|default(0) }}'
+            unit_of_measurement: "%"
+            
+        xiaomi_kidsroom_aqi:
+            friendly_name: "Kids Room AQI"
+            value_template: '{{ states.fan.kidsroom_xiaomi.attributes.aqi|default(0) }}'
+            unit_of_measurement: "AQI"
+        xiaomi_kidsroom_temperature:
+            friendly_name: "Kids Room temperature"
+            value_template: '{{ states.fan.kidsroom_xiaomi.attributes.temperature|default(0) }}'
+            unit_of_measurement: "℃"
+            icon_template: mdi:thermometer
+        xiaomi_kidsroom_humidity:
+            friendly_name: "Kids Room humidity"
+            value_template: '{{ states.fan.kidsroom_xiaomi.attributes.humidity|default(0) }}'
+            unit_of_measurement: "%"
+    
+  - platform: rest
+    resource: !secret looko2_api_url_with_token
+    name: "PM1"
+    unit_of_measurement: 'ug/m3'
+    value_template: '{{value_json.PM1}}'
+            
+  - platform: rest
+    resource: !secret looko2_api_url_with_token
+    name: "PM2.5"
+    unit_of_measurement: 'ug/m3'
+    value_template: '{{value_json.PM25}}'
+    
+  - platform: rest
+    resource: !secret looko2_api_url_with_token
+    name: "PM10"
+    unit_of_measurement: 'ug/m3'
+    value_template: '{{value_json.PM10}}'
+    
+  - platform: xiaomi_miio
+    name: Xiaomi Air Monitor Living Room
+    host: 192.168.1.144
+    token: !secret xiaomi_miio_air_monitor_Living_room_token
