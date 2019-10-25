@@ -17,7 +17,6 @@ script: !include scripts.yaml
 device_tracker:
   - platform: google_maps
     username: !secret device_tracker_google_maps_username
-    password: not_required_but_here_for_trevis_build_purpose_only
 
 input_boolean:
   nobody_home:
