@@ -4,3 +4,6 @@ Automated CI on Hassio:
 https://community.home-assistant.io/t/guide-to-setting-up-a-fully-automated-ci-for-hassio/51576
 (not used)
 
+
+SmartThings (BLOCKED by lack of static external IP)
+- requires external access with SSL
