@@ -465,22 +465,3 @@ set_sharp_speed_min:
       data:
         entity_id: input_select.sharp_speed
     
-
-# set_sharp_speed_max:
-#   sequence:
-#     - condition: state
-#       entity_id: 'input_select.sharp_mode'
-#       state: "Humidify"
-              
-#   {% if is_state('input_select.sharp_speed', 'Med') %}
-#             # 4 presses
-#     - service: ifttt.trigger
-#       data:
-#         event: sharp_speed
-#     - service: input_select.select_option
-#       data:
-#         entity_id: input_select.sharp_speed
-#         option: "Min"
-#     - delay: '00:00:10'
-#   {% endif %}
-    
