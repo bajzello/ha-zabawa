@@ -6,6 +6,8 @@ default_config:
 # http:
 #   base_url: example.duckdns.org:8123
 
+#comment testing git-pull addon in hassio
+
 # Text to speech
 tts:
   - platform: google_translate
