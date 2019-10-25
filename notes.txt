@@ -1,0 +1,5 @@
+Useful links:
+
+Automated CI on Hassio:
+https://community.home-assistant.io/t/guide-to-setting-up-a-fully-automated-ci-for-hassio/51576
+
