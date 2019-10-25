@@ -13,7 +13,7 @@ build_ci:
             message: >
               Travis build failed! {{ "\uD83E\uDD2C" }}
 
-    - alias: System Travis Build Passed
+    - alias: System Travis Build Passed - Git Pull & Hassio Restart
       trigger:
         - platform: state
           entity_id: sensor.travis_build_status
@@ -25,9 +25,9 @@ build_ci:
             title: Travis build status
             message: >
               Travis build passed! {{ "\uD83D\uDC4D" }}
-        # - service: hassio.addon_start
-        #   data:
-        #     addon: core_git_pull
+        - service: hassio.addon_start
+          data:
+            addon: core_git_pull
 
   sensor:
     - platform: rest
