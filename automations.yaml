@@ -102,17 +102,18 @@
       conditions:
         - condition: and
           conditions:
-            - condition: numeric_state
-              entity_id: 'sensor.xiaomi_air_monitor_living_room'
-              above: 20
+            - condition: template
+              value_template: "{{ states.sensor.xiaomi_air_monitor_living_room.state | float > states.input_number.max_aqi_for_livnig_room.state | float }}"
             - condition: state
               entity_id: 'input_select.sharp_mode'
               state: "Off"
         - condition: and
           conditions:
-            - condition: numeric_state
-              entity_id: 'sensor.xiaomi_air_monitor_living_room'
-              below: 20
+            - condition: template
+              value_template: "{{ states.sensor.xiaomi_air_monitor_living_room.state | float < states.input_number.max_aqi_for_livnig_room.state | float }}"
+            # - condition: numeric_state
+            #   entity_id: 'sensor.xiaomi_air_monitor_living_room'
+            #   below: 20
             - condition: state
               entity_id: 'input_select.sharp_mode'
               state: "Clean"
@@ -120,9 +121,9 @@
     - service: script.turn_on
       data_template:
         entity_id: >-
-            {% if states('sensor.xiaomi_air_monitor_living_room') | float > 20 and not is_state('input_select.sharp_mode', 'Humidify') and not is_state('input_select.sharp_mode', 'Clean') %}
+            {% if states('sensor.xiaomi_air_monitor_living_room') | float > states.input_number.max_aqi_for_livnig_room.state | float and not is_state('input_select.sharp_mode', 'Humidify') and not is_state('input_select.sharp_mode', 'Clean') %}
                 script.sharp_turn_clean_on
-            {% elif states('sensor.xiaomi_air_monitor_living_room') | float < 20 and is_state('input_select.sharp_mode', 'Clean') %}
+            {% elif states('sensor.xiaomi_air_monitor_living_room') | float < states.input_number.max_aqi_for_livnig_room.state | float and is_state('input_select.sharp_mode', 'Clean') %}
                 script.sharp_turn_off
             {% else %}
                 script.non_existent
