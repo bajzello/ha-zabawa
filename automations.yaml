@@ -1,174 +1,60 @@
-- alias: "PLAYGROUND AUTOMATION"
+- alias: "Playroom: Air quality"
   trigger:
     platform: time_pattern
-    hours: "/99999"
-  action:
-    service: notify.android_lukasz
-    data:
-      message: "Your message goes here"
-      title: "Custom subject"
-
-- alias: "Playroom Air Quality"
-  trigger:
-    platform: time_pattern
-    #TODO: extract as param time interval and share for all air purifiers
-    # You can also match on interval. This will match every 1 minute
     minutes: "/15"
-    #seconds: "/15"
   action:
-    - service: system_log.write
-      data_template:
-        message: >-
-            {{ '[Playroom-NEEEEW] AQI: ' + states.sensor.xiaomi_pro_aqi.state }}
-        level: warning
-
     - service_template: >
         {% if states.sensor.xiaomi_pro_aqi.state | float > states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.playroom_xiaomi', 'off') %}
             fan.turn_on
-        {% elif states('sensor.xiaomi_air_monitor_living_room') | float < states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.playroom_xiaomi', 'on') %}
+        {% elif states.sensor.xiaomi_pro_aqi.state | float < states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.playroom_xiaomi', 'on') %}
             fan.turn_off
         {% else %}
             fan.xiaomi_miio_set_child_lock_on
         {% endif %}
       entity_id: 'fan.playroom_xiaomi'
 
-- alias: "[OLD] Playroom: AQI below 20"
+- alias: "Garage: Air quality"
   trigger:
     platform: time_pattern
-    #TODO: extract as param time interval and share for all air purifiers
-    # You can also match on interval. This will match every 1 minute
     minutes: "/15"
-  condition:
-    condition: or
-    conditions:
-        - condition: and
-          conditions:
-            - condition: state
-              entity_id: 'fan.playroom_xiaomi'
-              state: 'on'
-            - condition: numeric_state
-              entity_id: 'sensor.xiaomi_pro_aqi'
-              below: 20
-        
-        - condition: and
-          conditions:
-            - condition: state
-              entity_id: 'fan.playroom_xiaomi'
-              state: 'off'
-            - condition: numeric_state
-              entity_id: 'sensor.xiaomi_pro_aqi'
-              above: 20
   action:
     - service_template: >
-        {% if states.sensor.xiaomi_pro_aqi.state | float > 20 %}
+        {% if states.sensor.xiaomi_garage_aqi.state | float > states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.garage_xiaomi', 'off') %}
             fan.turn_on
-        {% else %}
+        {% elif states.sensor.xiaomi_garage_aqi.state | float < states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.garage_xiaomi', 'on') %}
             fan.turn_off
-        {% endif %}
-      entity_id: 'fan.playroom_xiaomi'
-
-- alias: "Garage: AQI below 20"
-  trigger:
-    platform: time_pattern
-    #TODO: extract as param time interval and share for all air purifiers
-    # You can also match on interval. This will match every 1 minute
-    minutes: "/15"
-  condition:
-    condition: or
-    conditions:
-        - condition: and
-          conditions:
-            - condition: state
-              entity_id: 'fan.garage_xiaomi'
-              state: 'on'
-            - condition: numeric_state
-              entity_id: 'sensor.xiaomi_garage_aqi'
-              below: 20
-        
-        - condition: and
-          conditions:
-            - condition: state
-              entity_id: 'fan.garage_xiaomi'
-              state: 'off'
-            - condition: numeric_state
-              entity_id: 'sensor.xiaomi_garage_aqi'
-              above: 20
-  action:
-    - service_template: >
-        {% if states.sensor.xiaomi_garage_aqi.state | float > 20 %}
-            fan.turn_on
         {% else %}
-            fan.turn_off
+            fan.xiaomi_miio_set_child_lock_on
         {% endif %}
       entity_id: 'fan.garage_xiaomi'
         
-- alias: "Bedroom: AQI below 20"
+- alias: "Bedroom: Air quality"
   trigger:
     platform: time_pattern
-    #TODO: extract as param time interval and share for all air purifiers
-    # You can also match on interval. This will match every 1 minute
     minutes: "/15"
-  condition:
-    condition: or
-    conditions:
-        - condition: and
-          conditions:
-            - condition: state
-              entity_id: 'fan.bedroom_xiaomi'
-              state: 'on'
-            - condition: numeric_state
-              entity_id: 'sensor.xiaomi_bedroom_aqi'
-              below: 20
-        
-        - condition: and
-          conditions:
-            - condition: state
-              entity_id: 'fan.bedroom_xiaomi'
-              state: 'off'
-            - condition: numeric_state
-              entity_id: 'sensor.xiaomi_bedroom_aqi'
-              above: 20
   action:
     - service_template: >
-        {% if states.sensor.xiaomi_bedroom_aqi.state | float > 20 %}
+        {% if states.sensor.xiaomi_bedroom_aqi.state | float > states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.bedroom_xiaomi', 'off') %}
             fan.turn_on
-        {% else %}
+        {% elif states.sensor.xiaomi_bedroom_aqi.state | float < states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.bedroom_xiaomi', 'on') %}
             fan.turn_off
+        {% else %}
+            fan.xiaomi_miio_set_child_lock_on
         {% endif %}
       entity_id: 'fan.bedroom_xiaomi'
         
-- alias: "Kidsroom: AQI below 20"
+- alias: "Kidsroom: Air quality"
   trigger:
     platform: time_pattern
-    #TODO: extract as param time interval and share for all air purifiers
-    # You can also match on interval. This will match every 1 minute
     minutes: "/15"
-  condition:
-    condition: or
-    conditions:
-        - condition: and
-          conditions:
-            - condition: state
-              entity_id: 'fan.kidsroom_xiaomi'
-              state: 'on'
-            - condition: numeric_state
-              entity_id: 'sensor.xiaomi_kidsroom_aqi'
-              below: 20
-        
-        - condition: and
-          conditions:
-            - condition: state
-              entity_id: 'fan.kidsroom_xiaomi'
-              state: 'off'
-            - condition: numeric_state
-              entity_id: 'sensor.xiaomi_kidsroom_aqi'
-              above: 20
   action:
     - service_template: >
-        {% if states.sensor.xiaomi_kidsroom_aqi.state | float > 20 %}
+        {% if states.sensor.xiaomi_kidsroom_aqi.state | float > states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.kidsroom_xiaomi', 'off') %}
             fan.turn_on
-        {% else %}
+        {% elif states.sensor.xiaomi_kidsroom_aqi.state | float < states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.kidsroom_xiaomi', 'on') %}
             fan.turn_off
+        {% else %}
+            fan.xiaomi_miio_set_child_lock_on
         {% endif %}
       entity_id: 'fan.kidsroom_xiaomi'
         

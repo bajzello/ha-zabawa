@@ -55,6 +55,7 @@ input_number:
     initial: 20
     min: 1
     max: 60
+    mode: box
 
 notify:
   - name: android_lukasz
