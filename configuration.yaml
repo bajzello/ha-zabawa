@@ -56,6 +56,11 @@ input_number:
     min: 1
     max: 60
 
+notify:
+  - name: android_lukasz
+    platform: simplepush
+    device_key: !secret simplepush_lukasz_android_device_key
+
 fan:
 # Xiaomi Air Purifier Pro
   - platform: xiaomi_miio

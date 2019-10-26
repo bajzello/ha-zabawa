@@ -1,12 +1,12 @@
-# - alias: "PLAYGROUND AUTOMATION"
-#   trigger:
-#     platform: time_pattern
-#     hours: "/99999"
-#   action:
-#     service: persistent_notification.create
-#     data:
-#       message: "Your message goes here"
-#       title: "Custom subject"
+- alias: "PLAYGROUND AUTOMATION"
+  trigger:
+    platform: time_pattern
+    hours: "/99999"
+  action:
+    service: notify.android_lukasz
+    data:
+      message: "Your message goes here"
+      title: "Custom subject"
 
 - alias: "Playroom Air Quality"
   trigger:
@@ -419,3 +419,16 @@
             script.turn_off_max_cleaning
         {% endif %}
 
+
+- alias: "Notify when SPA Machinery temp below 15"
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.temperature_158d0002b87fdd
+    below: 38
+  action:
+    service: notify.android_lukasz
+    data:
+      message: "HA-Zabawa - SPA Machinery Temperature"
+      title: "Temperature: {{ states('sensor.temperature_158d0002b87fdd') }} is below threshold (38)" 
+      
+      
