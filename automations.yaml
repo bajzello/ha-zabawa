@@ -1,3 +1,12 @@
+- alias: "PLAYGROUND"
+  trigger:
+    platform: time_pattern
+    hours: "/99999"
+  action:
+    service: switch.toggle
+    data:
+        entity_id: switch.nawilzacz
+
 - alias: "Playroom: Air quality"
   trigger:
     platform: time_pattern
@@ -58,34 +67,29 @@
         {% endif %}
       entity_id: 'fan.kidsroom_xiaomi'
         
-- alias: "Upstairs: Humidity 45-55%"
+- alias: "Upstairs: Humidity"
   trigger:
     platform: time_pattern
-    #TODO: extract as param time interval and share for all air purifiers
-    # You can also match on interval. This will match every 1 minute
     minutes: "/15"
-  condition:
-    condition: or
-    conditions:
+  action:
+    - condition: or
+      conditions:
         - condition: and
           conditions:
             - condition: state
               entity_id: 'switch.nawilzacz'
               state: 'off'
-            - condition: numeric_state
-              entity_id: 'sensor.humidity_158d0002b6ca82'
-              below: 45
+            - condition: template
+              value_template: "{{ states.sensor.humidity_158d0002b6ca82.state | float < states.input_number.min_humidity.state | float }}"
         - condition: and
           conditions:
             - condition: state
               entity_id: 'switch.nawilzacz'
               state: 'on'
-            - condition: numeric_state
-              entity_id: 'sensor.humidity_158d0002b6ca82'
-              above: 55
-  action:
-    service: switch.toggle
-    data:
+            - condition: template
+              value_template: "{{ states.sensor.humidity_158d0002b6ca82.state | float > states.input_number.max_humidity.state | float }}"
+    - service: switch.toggle
+      data:
         entity_id: switch.nawilzacz
 
 # this script assumes that if humidifier is on it will be off by separate humidify script - that way they can be turned on and off separately
@@ -111,9 +115,6 @@
           conditions:
             - condition: template
               value_template: "{{ states.sensor.xiaomi_air_monitor_living_room.state | float < states.input_number.max_aqi_for_livnig_room.state | float }}"
-            # - condition: numeric_state
-            #   entity_id: 'sensor.xiaomi_air_monitor_living_room'
-            #   below: 20
             - condition: state
               entity_id: 'input_select.sharp_mode'
               state: "Clean"
@@ -139,9 +140,8 @@
       conditions:
         - condition: and
           conditions:
-            - condition: numeric_state
-              entity_id: 'sensor.humidity_158d00027867c3'
-              below: 45
+            - condition: template
+              value_template: "{{ states.sensor.humidity_158d00027867c3.state | float < states.input_number.min_humidity.state | float }}"
             - condition: or
               conditions:
                 - condition: state
@@ -152,19 +152,17 @@
                   state: "Clean"
         - condition: and
           conditions:
-            - condition: numeric_state
-              entity_id: 'sensor.humidity_158d00027867c3'
-              above: 55
+            - condition: template
+              value_template: "{{ states.sensor.humidity_158d00027867c3.state | float > states.input_number.max_humidity.state | float }}"
             - condition: state
               entity_id: 'input_select.sharp_mode'
               state: "Humidify"
-    
     - service: script.turn_on
       data_template:
         entity_id: >-
-            {% if states('sensor.humidity_158d00027867c3') | float < 45 and not is_state('input_select.sharp_mode', 'Humidify') %}
+            {% if states('sensor.humidity_158d00027867c3') | float < states.input_number.min_humidity.state | float and not is_state('input_select.sharp_mode', 'Humidify') %}
                 script.sharp_turn_humidify_on
-            {% elif states('sensor.humidity_158d00027867c3') | float > 55 and is_state('input_select.sharp_mode', 'Humidify') %}
+            {% elif states('sensor.humidity_158d00027867c3') | float > states.input_number.max_humidity.state | float and is_state('input_select.sharp_mode', 'Humidify') %}
                 script.sharp_turn_off
             {% else %}
                 script.non_existent
@@ -307,15 +305,16 @@
         {% endif %}
 
 
-- alias: "Notify when SPA Machinery temp below 15"
+- alias: "Notify when SPA Machinery temp below alert value"
   trigger:
-    platform: numeric_state
-    entity_id: sensor.temperature_158d0002b87fdd
-    below: 38
+    platform: template
+    value_template: "{{ states.sensor.temperature_158d0002b87fdd.state | float < states.input_number.min_alert_spa_machinery_temperature.state | float }}"
   action:
-    service: notify.android_lukasz
-    data:
-      message: "HA-Zabawa - SPA Machinery Temperature"
-      title: "Temperature: {{ states('sensor.temperature_158d0002b87fdd') }} is below threshold (38)" 
+    - condition: template
+      value_template: "{{ states.sensor.temperature_158d0002b87fdd.state | float < states.input_number.min_alert_spa_machinery_temperature.state | float }}"
+    - service: notify.android_lukasz
+      data:
+        message: "HA-Zabawa - SPA Machinery Temperature"
+        title: "Temperature: {{ states.sensor.temperature_158d0002b87fdd.state }} is below threshold ({{ states.input_number.min_alert_spa_machinery_temperature.state }})" 
       
       

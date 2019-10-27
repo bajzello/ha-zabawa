@@ -7,3 +7,7 @@ https://community.home-assistant.io/t/guide-to-setting-up-a-fully-automated-ci-f
 
 SmartThings (BLOCKED by lack of static external IP)
 - requires external access with SSL
+
+Grafana for external to Hassio monitoring and visualisation (BLOCKED by lack of static external IP)
+- regardless whether monitoring as Grafana will be running on prem (with strong uplink) or on the cloud externally accessible IP seems to be required - wait for fiberlink
+
