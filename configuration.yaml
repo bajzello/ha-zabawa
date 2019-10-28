@@ -124,6 +124,10 @@ xiaomi_aqara:
     
 ifttt:
   key: !secret ifttt_key
+  
+tado:
+  username: !secret tado_account_username
+  password: !secret tado_account_password
 
 # Sensors
 sensor:
