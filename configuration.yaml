@@ -31,6 +31,30 @@ device_tracker:
   - platform: google_maps
     username: !secret device_tracker_google_maps_username
 
+rest_command:
+  gate_open_close:
+    url: !secret supla_direct_link_gate_open_close
+    method: GET
+    
+binary_sensor:
+  - platform: template
+    sensors:
+      gate:
+        friendly_name: "Gate"
+        device_class: garage_door
+        value_template: "{{ is_state('sensor.gate_closed', 'False') }}"
+
+switch:
+  - platform: template
+    switches:
+      gate:
+        friendly_name: Brama wjazdowa
+        value_template: "{{ is_state('binary_sensor.gate', 'on') }}"
+        turn_on:
+          service: rest_command.gate_open_close
+        turn_off:
+          service: rest_command.gate_open_close
+
 input_boolean:
   nobody_home:
     name: Nikogo nie ma w domu
@@ -138,8 +162,16 @@ tado:
   username: !secret tado_account_username
   password: !secret tado_account_password
 
+
 # Sensors
 sensor:
+    # can I get ride of that and have only binary_sensor ? Was unable to template binary sensor value properly...
+  - platform: rest
+    resource: !secret supla_direct_link_gate_read
+    method: GET
+    name: Gate Closed
+    value_template: "{{ value_json.hi }}"
+
   - platform: template
     sensors:
         #4 oczyszczacze powietrza Xiaomi
