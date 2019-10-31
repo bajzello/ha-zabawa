@@ -27,6 +27,10 @@ camera:
   username: !secret camera_dahua_front_username
   password: !secret camera_dahua_front_password
 
+# automower:
+#   username: !secret husqvarna_username
+#   password: !secret husqvarna_password
+
 device_tracker:
   - platform: google_maps
     username: !secret device_tracker_google_maps_username
