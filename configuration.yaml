@@ -43,16 +43,19 @@ binary_sensor:
         friendly_name: "Gate"
         device_class: garage_door
         value_template: "{{ is_state('sensor.gate_closed', 'False') }}"
-
-switch:
+          
+cover:
   - platform: template
-    switches:
-      gate:
-        friendly_name: Brama wjazdowa
+    covers:
+      gateway:
+        friendly_name: "Gateway"
         value_template: "{{ is_state('binary_sensor.gate', 'on') }}"
-        turn_on:
+        device_class: garage
+        open_cover:
           service: rest_command.gate_open_close
-        turn_off:
+        close_cover:
+          service: rest_command.gate_open_close
+        stop_cover:
           service: rest_command.gate_open_close
 
 input_boolean:
