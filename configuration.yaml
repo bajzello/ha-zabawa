@@ -20,7 +20,7 @@ script: !include scripts.yaml
 
 camera:
 - platform: generic
-  still_image_url: "http://192.168.1.201/cgi-bin/snapshot.cgi"
+  still_image_url: "http://192.168.1.160/cgi-bin/snapshot.cgi"
   stream_source: "not_used_as_does_not_work_ERROR (stream_worker) [libav.rtsp] method OPTIONS failed: 401 Unauthorized"
   authentication: digest
   verify_ssl: false
@@ -154,7 +154,7 @@ fan:
 wemo:
   discovery: false
   static:
-    - 192.168.1.125
+    - 192.168.1.145
     
 # You can leave MAC empty if you only have one gateway.
 xiaomi_aqara:
