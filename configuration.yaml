@@ -34,6 +34,20 @@ camera:
     verify_ssl: false
     username: !secret camera_dahua_second_username
     password: !secret camera_dahua_second_password
+#-----WARNING:----- 
+# completely deactivate the sonoff component from HA while doing a firmware update, 
+# due to auto-relogin function you might be kicked out of the app before the process is completed. 
+# I would not be held liable for any problems occuring if not following this steps!
+
+# https://github.com/peterbuga/HASS-sonoff-ewelink
+sonoff:
+  username: !secret sonoff_ewelink_username
+  password: !secret sonoff_ewelink_password
+  scan_interval: 60
+  grace_period: 600
+  api_region: 'eu'
+  entity_prefix: True
+  debug: False
 
 automower:
   username: !secret husqvarna_username

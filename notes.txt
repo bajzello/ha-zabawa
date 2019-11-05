@@ -1,3 +1,9 @@
+REMEMBER:
+- turn off sonoff integration in HA to avoid problems when upgrading sonoff devices (see: https://github.com/peterbuga/HASS-sonoff-ewelink)
+- sonoff devices for integration above are shared to second mail account to avoid being kicked out from mobile app
+
+
+
 Useful links:
 
 Automated CI on Hassio:

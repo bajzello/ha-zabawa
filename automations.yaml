@@ -3,9 +3,9 @@
     platform: time_pattern
     hours: "/99999"
   action:
-    service: switch.toggle
-    data:
-        entity_id: switch.nawilzacz
+    - service: switch.turn_on
+      data:
+        entity_id: switch.sonoff_10002befc0
 
 - alias: "Playroom: Air quality"
   trigger:
@@ -174,14 +174,16 @@
     # Military time format. This trigger will fire at 3:36 AM
     at: "03:36:00"
   action:
-    - service: ifttt.trigger
-      data: {"event":"sonoff_off"}
+    - service: switch.turn_off
+      data:
+        entity_id: switch.sonoff_10002befc0
       
     # Waits 1 minute
     - delay: '00:01:00'
     
-    - service: ifttt.trigger
-      data: {"event":"sonoff_on"}
+    - service: switch.turn_on
+      data:
+        entity_id: switch.sonoff_10002befc0
       
     - service: input_select.select_option
       data:
