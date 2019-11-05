@@ -41,13 +41,29 @@ camera:
 
 # https://github.com/peterbuga/HASS-sonoff-ewelink
 sonoff:
-  username: !secret sonoff_ewelink_username
-  password: !secret sonoff_ewelink_password
-  scan_interval: 60
-  grace_period: 600
-  api_region: 'eu'
-  entity_prefix: True
-  debug: False
+ username: !secret sonoff_ewelink_username
+ password: !secret sonoff_ewelink_password
+ scan_interval: 60
+ grace_period: 600
+ api_region: 'eu'
+ entity_prefix: True
+ debug: False
+  
+climate:
+  - platform: generic_thermostat
+    name: Spa
+    heater: switch.sonoff_10005bb9e1
+    target_sensor: sensor.sonoff_10005bb9e1_temperature
+    min_temp: 20
+    max_temp: 45
+    target_temp: 35
+    cold_tolerance: 1
+    hot_tolerance: 1
+    min_cycle_duration:
+        minutes: 5
+    initial_hvac_mode: "heat"
+    precision: 1.0
+    
 
 automower:
   username: !secret husqvarna_username

@@ -7,6 +7,17 @@
       data:
         entity_id: switch.sonoff_10002befc0
 
+#do it on boot so sensor will be picked up by generic thermostat as it initializes later than him
+- alias: "On boot refresh desired Spa temperature"
+  trigger:
+    platform: homeassistant
+    event: start
+  action:
+    service: climate.set_temperature
+    data_template:
+        entity_id: climate.spa
+        temperature: '{{ states.climate.spa.attributes.temperature }}'
+
 - alias: "Playroom: Air quality"
   trigger:
     platform: time_pattern
