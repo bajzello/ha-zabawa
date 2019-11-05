@@ -19,17 +19,25 @@ automation: !include automations.yaml
 script: !include scripts.yaml
 
 camera:
-- platform: generic
-  still_image_url: "http://192.168.1.160/cgi-bin/snapshot.cgi"
-  stream_source: "not_used_as_does_not_work_ERROR (stream_worker) [libav.rtsp] method OPTIONS failed: 401 Unauthorized"
-  authentication: digest
-  verify_ssl: false
-  username: !secret camera_dahua_front_username
-  password: !secret camera_dahua_front_password
+  - platform: generic
+    still_image_url: "http://192.168.1.160/cgi-bin/snapshot.cgi"
+    stream_source: "not_used_as_does_not_work_ERROR (stream_worker) [libav.rtsp] method OPTIONS failed: 401 Unauthorized"
+    authentication: digest
+    verify_ssl: false
+    username: !secret camera_dahua_front_username
+    password: !secret camera_dahua_front_password
+  
+  - platform: generic
+    still_image_url: "http://192.168.1.161/cgi-bin/snapshot.cgi"
+    stream_source: "not_used_as_does_not_work_ERROR (stream_worker) [libav.rtsp] method OPTIONS failed: 401 Unauthorized"
+    authentication: digest
+    verify_ssl: false
+    username: !secret camera_dahua_second_username
+    password: !secret camera_dahua_second_password
 
-# automower:
-#   username: !secret husqvarna_username
-#   password: !secret husqvarna_password
+automower:
+  username: !secret husqvarna_username
+  password: !secret husqvarna_password
 
 device_tracker:
   - platform: google_maps
