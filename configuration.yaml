@@ -56,7 +56,7 @@ climate:
     target_sensor: sensor.sonoff_10005bb9e1_temperature
     min_temp: 20
     max_temp: 45
-    target_temp: 35
+    target_temp: 33
     cold_tolerance: 1
     hot_tolerance: 1
     min_cycle_duration:
@@ -107,25 +107,6 @@ input_boolean:
   max_clean:
     name: Max czyszczenie wlaczone
     initial: false
-
-input_select:
-  sharp_speed:
-    name: Sharp speed
-    options:
-      - Auto
-      - Pollen
-      - Max
-      - Med
-      - Low
-    initial: Auto
-    
-  sharp_mode:
-    name: Sharp mode
-    options:
-      - "Off"
-      - "Clean"
-      - "Humidify"
-    initial: "Off"
 
 input_number:
   max_aqi_for_xiaomi:
