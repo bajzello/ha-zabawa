@@ -38,7 +38,13 @@ turn_on_max_cleaning:
     - service: fan.set_speed
       data:
         entity_id: fan.playroom_xiaomi
-        speed: favorite    
+        speed: favorite
+        
+    # Living Room Humidifier
+    - service: fan.set_speed
+      data:
+        entity_id: fan.living_room_humidifier
+        speed: high
         
     # needed and to just to protect device from too often on/off
     - delay: '00:00:30'
@@ -62,6 +68,10 @@ turn_on_max_cleaning:
     # not needed - just to protect device from too often on/off
     - service: automation.trigger
       entity_id: automation.playroom_air_quality
+    
+    # not needed - just to protect device from too often on/off
+    - service: automation.trigger
+      entity_id: automation.living_room_humidity
         
 turn_off_max_cleaning:
   sequence:
@@ -98,7 +108,12 @@ turn_off_max_cleaning:
     - service: fan.set_speed
       data:
         entity_id: fan.playroom_xiaomi
-        speed: auto
+        speed: silent
+    
+    - service: fan.set_speed
+      data:
+        entity_id: fan.living_room_humidifier
+        speed: silent
     
     # needed and to just to protect device from too often on/off
     - delay: '00:00:15'
@@ -122,3 +137,7 @@ turn_off_max_cleaning:
     # not needed - just to protect device from too often on/off
     - service: automation.trigger
       entity_id: automation.playroom_air_quality
+      
+    # not needed - just to protect device from too often on/off
+    - service: automation.trigger
+      entity_id: automation.living_room_humidity

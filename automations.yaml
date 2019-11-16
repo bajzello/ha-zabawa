@@ -3,9 +3,11 @@
     platform: time_pattern
     hours: "/99999"
   action:
-    - service: switch.turn_on
+    - service: fan.set_speed
       data:
-        entity_id: switch.sonoff_10002befc0
+        entity_id: fan.living_room_humidifier
+        speed: high
+        
 
 #do it on boot so sensor will be picked up by generic thermostat as it initializes later than him
 - alias: "On boot refresh desired Spa temperature"
@@ -92,6 +94,21 @@
             fan.xiaomi_miio_set_child_lock_on
         {% endif %}
       entity_id: 'fan.playroom_xiaomi'
+
+- alias: "Living Room: Humidity"
+  trigger:
+    platform: time_pattern
+    minutes: "/15"
+  action:
+    - service_template: >
+        {% if states.sensor.humidity_158d00027867c3.state | float > states.input_number.max_humidity.state | float and states.fan.living_room_humidifier.state  == 'on' %}
+            fan.turn_off
+        {% elif states.sensor.humidity_158d00027867c3.state | float < states.input_number.min_humidity.state | float and states.fan.living_room_humidifier.state  == 'off' %}
+            fan.turn_on
+        {% else %}
+            fan.xiaomi_miio_set_child_lock_on
+        {% endif %}
+      entity_id: fan.living_room_humidifier
         
 - alias: "Upstairs: Humidity"
   trigger:

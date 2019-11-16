@@ -176,6 +176,13 @@ fan:
     host: 192.168.1.164
     token: !secret xiaomi_air_purifier_2s_playroom_token
     
+# HUMIDIFIERS
+# Xiaomi Humidifier (real model is: zhimi.humidifier.cb1)
+  - platform: xiaomi_miio
+    name: Living Room Humidifier
+    host: 192.168.1.165
+    token: !secret xiaomi_humidifier_token
+    
 wemo:
   discovery: false
   static:
