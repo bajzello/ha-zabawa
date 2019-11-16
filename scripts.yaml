@@ -45,7 +45,7 @@ turn_on_max_cleaning:
         
     # as setting speed turns on xiaomi fan -> invoke automation to set it correctly
     - service: automation.trigger
-      entity_id: automation.playroom_air_quality
+      entity_id: automation.living_room_air_quality
     
     # not needed - just to protect device from too often on/off
     - service: automation.trigger
@@ -61,7 +61,7 @@ turn_on_max_cleaning:
       
     # not needed - just to protect device from too often on/off
     - service: automation.trigger
-      entity_id: automation.kidsroom_air_quality
+      entity_id: automation.playroom_air_quality
         
 turn_off_max_cleaning:
   sequence:
@@ -105,7 +105,7 @@ turn_off_max_cleaning:
         
     # as setting speed turns on xiaomi fan -> invoke automation to set it correctly
     - service: automation.trigger
-      entity_id: automation.playroom_air_quality
+      entity_id: automation.living_room_air_quality
     
     # not needed - just to protect device from too often on/off
     - service: automation.trigger
@@ -121,4 +121,4 @@ turn_off_max_cleaning:
       
     # not needed - just to protect device from too often on/off
     - service: automation.trigger
-      entity_id: automation.kidsroom_air_quality
+      entity_id: automation.playroom_air_quality
