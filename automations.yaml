@@ -18,20 +18,20 @@
         entity_id: climate.spa
         temperature: '{{ states.climate.spa.attributes.temperature }}'
 
-- alias: "Playroom: Air quality"
+- alias: "Living Room: Air quality"
   trigger:
     platform: time_pattern
     minutes: "/15"
   action:
     - service_template: >
-        {% if states.sensor.xiaomi_pro_aqi.state | float > states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.playroom_xiaomi', 'off') %}
+        {% if states.sensor.xiaomi_pro_aqi.state | float > states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.livingroom_xiaomi', 'off') %}
             fan.turn_on
-        {% elif states.sensor.xiaomi_pro_aqi.state | float < states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.playroom_xiaomi', 'on') %}
+        {% elif states.sensor.xiaomi_pro_aqi.state | float < states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.livingroom_xiaomi', 'on') %}
             fan.turn_off
         {% else %}
             fan.xiaomi_miio_set_child_lock_on
         {% endif %}
-      entity_id: 'fan.playroom_xiaomi'
+      entity_id: 'fan.livingroom_xiaomi'
 
 - alias: "Garage: Air quality"
   trigger:
@@ -77,6 +77,21 @@
             fan.xiaomi_miio_set_child_lock_on
         {% endif %}
       entity_id: 'fan.kidsroom_xiaomi'
+      
+- alias: "Playroom: Air quality"
+  trigger:
+    platform: time_pattern
+    minutes: "/15"
+  action:
+    - service_template: >
+        {% if states.sensor.xiaomi_playroom_aqi.state | float > states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.playroom_xiaomi', 'off') %}
+            fan.turn_on
+        {% elif states.sensor.xiaomi_playroom_aqi.state | float < states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.playroom_xiaomi', 'on') %}
+            fan.turn_off
+        {% else %}
+            fan.xiaomi_miio_set_child_lock_on
+        {% endif %}
+      entity_id: 'fan.playroom_xiaomi'
         
 - alias: "Upstairs: Humidity"
   trigger:

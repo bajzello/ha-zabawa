@@ -146,9 +146,9 @@ notify:
     device_key: !secret simplepush_lukasz_android_device_key
 
 fan:
-# Xiaomi Air Purifier Pro
+# Xiaomi Air Purifier Pro - Living Room
   - platform: xiaomi_miio
-    name: Playroom Xiaomi
+    name: Living Room Xiaomi
     host: 192.168.1.140
     token: !secret xiaomi_air_purifier_pro_token
 
@@ -169,6 +169,12 @@ fan:
     name: Kids Room Xiaomi
     host: 192.168.1.143
     token: !secret xiaomi_air_purifier_2s_kidsroom_token
+    
+# Xiaomi Air Purifier 2S Playroom
+  - platform: xiaomi_miio
+    name: Playroom Xiaomi
+    host: 192.168.1.164
+    token: !secret xiaomi_air_purifier_2s_playroom_token
     
 wemo:
   discovery: false
@@ -202,17 +208,17 @@ sensor:
     sensors:
         #4 oczyszczacze powietrza Xiaomi
         xiaomi_pro_aqi:
-            friendly_name: "Playroom AQI"
-            value_template: '{{ states.fan.playroom_xiaomi.attributes.aqi|default(0) }}'
+            friendly_name: "Living Room AQI"
+            value_template: '{{ states.fan.livingroom_xiaomi.attributes.aqi|default(0) }}'
             unit_of_measurement: "AQI"
         xiaomi_pro_temperature:
-            friendly_name: "Playroom temperature"
-            value_template: '{{ states.fan.playroom_xiaomi.attributes.temperature|default(0) }}'
+            friendly_name: "Living Room temperature"
+            value_template: '{{ states.fan.livingroom_xiaomi.attributes.temperature|default(0) }}'
             unit_of_measurement: "℃"
             icon_template: mdi:thermometer
         xiaomi_pro_humidity:
-            friendly_name: "Playroom humidity"
-            value_template: '{{ states.fan.playroom_xiaomi.attributes.humidity|default(0) }}'
+            friendly_name: "Living Room humidity"
+            value_template: '{{ states.fan.livingroom_xiaomi.attributes.humidity|default(0) }}'
             unit_of_measurement: "%"
         
         xiaomi_garage_aqi:
@@ -255,6 +261,20 @@ sensor:
         xiaomi_kidsroom_humidity:
             friendly_name: "Kids Room humidity"
             value_template: '{{ states.fan.kidsroom_xiaomi.attributes.humidity|default(0) }}'
+            unit_of_measurement: "%"
+            
+        xiaomi_playroom_aqi:
+            friendly_name: "Playroom AQI"
+            value_template: '{{ states.fan.playroom_xiaomi.attributes.aqi|default(0) }}'
+            unit_of_measurement: "AQI"
+        xiaomi_playroom_temperature:
+            friendly_name: "Playroom temperature"
+            value_template: '{{ states.fan.playroom_xiaomi.attributes.temperature|default(0) }}'
+            unit_of_measurement: "℃"
+            icon_template: mdi:thermometer
+        xiaomi_playroom_humidity:
+            friendly_name: "Playroom humidity"
+            value_template: '{{ states.fan.playroom_xiaomi.attributes.humidity|default(0) }}'
             unit_of_measurement: "%"
     
   - platform: rest

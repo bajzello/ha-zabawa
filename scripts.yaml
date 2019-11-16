@@ -10,10 +10,10 @@ turn_on_max_cleaning:
       data:
         entity_id: input_boolean.max_clean
         
-    # Playroom
+    # Living Room
     - service: fan.set_speed
       data:
-        entity_id: fan.playroom_xiaomi
+        entity_id: fan.livingroom_xiaomi
         speed: favorite
     
     # Bedroom
@@ -33,6 +33,12 @@ turn_on_max_cleaning:
       data:
         entity_id: fan.garage_xiaomi
         speed: favorite
+    
+    # Playroom
+    - service: fan.set_speed
+      data:
+        entity_id: fan.playroom_xiaomi
+        speed: favorite    
         
     # needed and to just to protect device from too often on/off
     - delay: '00:00:30'
@@ -43,15 +49,19 @@ turn_on_max_cleaning:
     
     # not needed - just to protect device from too often on/off
     - service: automation.trigger
-      entity_id: automation.bedroom_aqi_below_20
+      entity_id: automation.bedroom_air_quality
         
     # not needed - just to protect device from too often on/off
     - service: automation.trigger
-      entity_id: automation.kidsroom_aqi_below_20
+      entity_id: automation.kidsroom_air_quality
 
     # not needed - just to protect device from too often on/off
     - service: automation.trigger
-      entity_id: automation.garage_aqi_below_20
+      entity_id: automation.garage_air_quality
+      
+    # not needed - just to protect device from too often on/off
+    - service: automation.trigger
+      entity_id: automation.kidsroom_air_quality
         
 turn_off_max_cleaning:
   sequence:
@@ -67,7 +77,7 @@ turn_off_max_cleaning:
   
     - service: fan.set_speed
       data:
-        entity_id: fan.playroom_xiaomi
+        entity_id: fan.livingroom_xiaomi
         speed: silent
     
     - service: fan.set_speed
@@ -84,6 +94,11 @@ turn_off_max_cleaning:
       data:
         entity_id: fan.garage_xiaomi
         speed: auto
+        
+    - service: fan.set_speed
+      data:
+        entity_id: fan.playroom_xiaomi
+        speed: auto
     
     # needed and to just to protect device from too often on/off
     - delay: '00:00:15'
@@ -92,11 +107,18 @@ turn_off_max_cleaning:
     - service: automation.trigger
       entity_id: automation.playroom_air_quality
     
+    # not needed - just to protect device from too often on/off
     - service: automation.trigger
-      entity_id: automation.bedroom_aqi_below_20
+      entity_id: automation.bedroom_air_quality
         
+    # not needed - just to protect device from too often on/off
     - service: automation.trigger
-      entity_id: automation.kidsroom_aqi_below_20
+      entity_id: automation.kidsroom_air_quality
 
+    # not needed - just to protect device from too often on/off
     - service: automation.trigger
-      entity_id: automation.garage_aqi_below_20
+      entity_id: automation.garage_air_quality
+      
+    # not needed - just to protect device from too often on/off
+    - service: automation.trigger
+      entity_id: automation.kidsroom_air_quality
