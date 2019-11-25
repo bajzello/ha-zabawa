@@ -27,13 +27,13 @@ camera:
     username: !secret camera_dahua_front_username
     password: !secret camera_dahua_front_password
   
-  - platform: generic
-    still_image_url: "http://192.168.1.161/cgi-bin/snapshot.cgi"
-    stream_source: "not_used_as_does_not_work_ERROR (stream_worker) [libav.rtsp] method OPTIONS failed: 401 Unauthorized"
-    authentication: digest
-    verify_ssl: false
-    username: !secret camera_dahua_second_username
-    password: !secret camera_dahua_second_password
+#   - platform: generic
+#     still_image_url: "http://192.168.1.161/cgi-bin/snapshot.cgi"
+#     stream_source: "not_used_as_does_not_work_ERROR (stream_worker) [libav.rtsp] method OPTIONS failed: 401 Unauthorized"
+#     authentication: digest
+#     verify_ssl: false
+#     username: !secret camera_dahua_second_username
+#     password: !secret camera_dahua_second_password
 #-----WARNING:----- 
 # completely deactivate the sonoff component from HA while doing a firmware update, 
 # due to auto-relogin function you might be kicked out of the app before the process is completed. 
@@ -190,9 +190,9 @@ wemo:
     
 # You can leave MAC empty if you only have one gateway.
 xiaomi_aqara:
-  discovery_retry: 5
   gateways:
-    - key: !secret xiaomi_aquara_key
+    - mac: !secret xiaomi_aquara_mac
+      key: !secret xiaomi_aquara_key
     
 ifttt:
   key: !secret ifttt_key
