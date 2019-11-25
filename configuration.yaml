@@ -56,7 +56,7 @@ climate:
     target_sensor: sensor.sonoff_10005bb9e1_temperature
     min_temp: 20
     max_temp: 45
-    target_temp: 33
+    target_temp: 34
     cold_tolerance: 1
     hot_tolerance: 1
     min_cycle_duration:
@@ -111,7 +111,7 @@ input_boolean:
 input_number:
   max_aqi_for_xiaomi:
     name: Max AQI for Xiaomi rooms
-    initial: 20
+    initial: 15
     min: 1
     max: 60
     mode: box
@@ -123,13 +123,13 @@ input_number:
     mode: box
   min_humidity:
     name: Min humidity
-    initial: 45
+    initial: 48
     min: 1
     max: 100
     mode: box
   max_humidity:
     name: Max humidity
-    initial: 55
+    initial: 52
     min: 1
     max: 100
     mode: box
