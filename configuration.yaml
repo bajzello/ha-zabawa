@@ -34,12 +34,17 @@ camera:
 #     verify_ssl: false
 #     username: !secret camera_dahua_second_username
 #     password: !secret camera_dahua_second_password
+
+
+
+
 #-----WARNING:----- 
 # completely deactivate the sonoff component from HA while doing a firmware update, 
 # due to auto-relogin function you might be kicked out of the app before the process is completed. 
 # I would not be held liable for any problems occuring if not following this steps!
 
 # https://github.com/peterbuga/HASS-sonoff-ewelink
+# REMEMBER TO SHARE IT WITH ACCOUNT SET HERE TO MAKE IT VISIBLE FOR HA
 sonoff:
  username: !secret sonoff_ewelink_username
  password: !secret sonoff_ewelink_password
@@ -139,6 +144,12 @@ input_number:
     min: 1
     max: 50
     mode: box
+    
+input_datetime:
+  bathroom_lights_on_time:
+    name: Bathroom Lights Shelves On Time
+    has_date: false
+    has_time: true
 
 notify:
   - name: android_lukasz
@@ -204,6 +215,10 @@ tado:
 
 # Sensors
 sensor:
+  - platform: time_date
+    display_options:
+      - 'time'
+
     # can I get ride of that and have only binary_sensor ? Was unable to template binary sensor value properly...
   - platform: rest
     resource: !secret supla_direct_link_gate_read

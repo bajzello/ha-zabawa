@@ -19,6 +19,17 @@
     data_template:
         entity_id: climate.spa
         temperature: '{{ states.climate.spa.attributes.temperature }}'
+        
+
+- alias: "Turn on Bathroom Shelves Lights on desired time"
+  trigger:
+    platform: template
+    value_template: "{{ states('sensor.time') == (state_attr('input_datetime.bathroom_lights_on_time', 'timestamp') | int | timestamp_custom('%H:%M', False)) }}"
+  action:
+    service: switch.turn_on
+    data:
+        entity_id: switch.sonoff_1000a4af39
+    
 
 - alias: "Living Room: Air quality"
   trigger:
