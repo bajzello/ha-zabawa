@@ -58,10 +58,10 @@ climate:
   - platform: generic_thermostat
     name: Spa
     heater: switch.sonoff_10005bb9e1
-    target_sensor: sensor.sonoff_10005bb9e1_temperature
+    target_sensor: sensor.spa_temperature_with_offset
     min_temp: 20
     max_temp: 45
-    target_temp: 34
+    target_temp: 37
     cold_tolerance: 1
     hot_tolerance: 1
     min_cycle_duration:
@@ -117,12 +117,6 @@ input_number:
   max_aqi_for_xiaomi:
     name: Max AQI for Xiaomi rooms
     initial: 15
-    min: 1
-    max: 60
-    mode: box
-  max_aqi_for_livnig_room:
-    name: Max AQI for Living Room
-    initial: 20
     min: 1
     max: 60
     mode: box
@@ -201,9 +195,17 @@ wemo:
     
 # You can leave MAC empty if you only have one gateway.
 xiaomi_aqara:
+  discovery_retry: 5
   gateways:
-    - mac: !secret xiaomi_aquara_mac
-      key: !secret xiaomi_aquara_key
+    # - host: 192.168.1.151
+    #   key: !secret xiaomi_aquara_key
+    
+    # - mac: !secret xiaomi_aquara_mac
+    #   key: !secret xiaomi_aquara_key
+      
+     - host: 192.168.1.151
+       mac: !secret xiaomi_aquara_mac
+       key: !secret xiaomi_aquara_key
     
 ifttt:
   key: !secret ifttt_key
@@ -230,74 +232,97 @@ sensor:
     sensors:
         #4 oczyszczacze powietrza Xiaomi
         xiaomi_pro_aqi:
-            friendly_name: "Living Room AQI"
+            friendly_name: "Living Room Xiaomi AQI"
             value_template: '{{ states.fan.livingroom_xiaomi.attributes.aqi|default(0) }}'
             unit_of_measurement: "AQI"
         xiaomi_pro_temperature:
-            friendly_name: "Living Room temperature"
+            friendly_name: "Living Room Xiaomi temperature"
             value_template: '{{ states.fan.livingroom_xiaomi.attributes.temperature|default(0) }}'
             unit_of_measurement: "℃"
             icon_template: mdi:thermometer
         xiaomi_pro_humidity:
-            friendly_name: "Living Room humidity"
+            friendly_name: "Living Room Xiaomi humidity"
             value_template: '{{ states.fan.livingroom_xiaomi.attributes.humidity|default(0) }}'
             unit_of_measurement: "%"
+        xiaomi_pro_mode:
+            friendly_name: "Living Room Xiaomi mode"
+            value_template: '{{ states.fan.livingroom_xiaomi.attributes.mode }}'
         
         xiaomi_garage_aqi:
-            friendly_name: "Garage AQI"
+            friendly_name: "Garage Xiaomi AQI"
             value_template: '{{ states.fan.garage_xiaomi.attributes.aqi|default(0) }}'
             unit_of_measurement: "AQI"
         xiaomi_garage_temperature:
-            friendly_name: "Garage temperature"
+            friendly_name: "Garage Xiaomi temperature"
             value_template: '{{ states.fan.garage_xiaomi.attributes.temperature|default(0) }}'
             unit_of_measurement: "℃"
             icon_template: mdi:thermometer
         xiaomi_garage_humidity:
-            friendly_name: "Garage humidity"
+            friendly_name: "Garage Xiaomi humidity"
             value_template: '{{ states.fan.garage_xiaomi.attributes.humidity|default(0) }}'
             unit_of_measurement: "%"
+        xiaomi_garage_mode:
+            friendly_name: "Garage Xiaomi mode"
+            value_template: '{{ states.fan.garage_xiaomi.attributes.mode }}'
             
         xiaomi_bedroom_aqi:
-            friendly_name: "Bedroom AQI"
+            friendly_name: "Bedroom Xiaomi AQI"
             value_template: '{{ states.fan.bedroom_xiaomi.attributes.aqi|default(0) }}'
             unit_of_measurement: "AQI"
         xiaomi_bedroom_temperature:
-            friendly_name: "Bedroom temperature"
+            friendly_name: "Bedroom Xiaomi temperature"
             value_template: '{{ states.fan.bedroom_xiaomi.attributes.temperature|default(0) }}'
             unit_of_measurement: "℃"
             icon_template: mdi:thermometer
         xiaomi_bedroom_humidity:
-            friendly_name: "Bedroom humidity"
+            friendly_name: "Bedroom Xiaomi humidity"
             value_template: '{{ states.fan.bedroom_xiaomi.attributes.humidity|default(0) }}'
             unit_of_measurement: "%"
+        xiaomi_bedroom_mode:
+            friendly_name: "Bedroom Xiaomi mode"
+            value_template: '{{ states.fan.bedroom_xiaomi.attributes.mode }}'
             
         xiaomi_kidsroom_aqi:
-            friendly_name: "Kids Room AQI"
+            friendly_name: "Kids Room Xiaomi AQI"
             value_template: '{{ states.fan.kidsroom_xiaomi.attributes.aqi|default(0) }}'
             unit_of_measurement: "AQI"
         xiaomi_kidsroom_temperature:
-            friendly_name: "Kids Room temperature"
+            friendly_name: "Kids Room Xiaomi temperature"
             value_template: '{{ states.fan.kidsroom_xiaomi.attributes.temperature|default(0) }}'
             unit_of_measurement: "℃"
             icon_template: mdi:thermometer
         xiaomi_kidsroom_humidity:
-            friendly_name: "Kids Room humidity"
+            friendly_name: "Kids Room Xiaomi humidity"
             value_template: '{{ states.fan.kidsroom_xiaomi.attributes.humidity|default(0) }}'
             unit_of_measurement: "%"
+        xiaomi_kidsroom_mode:
+            friendly_name: "Kids Room Xiaomi mode"
+            value_template: '{{ states.fan.kidsroom_xiaomi.attributes.mode }}'
             
         xiaomi_playroom_aqi:
-            friendly_name: "Playroom AQI"
+            friendly_name: "Playroom Xiaomi AQI"
             value_template: '{{ states.fan.playroom_xiaomi.attributes.aqi|default(0) }}'
             unit_of_measurement: "AQI"
         xiaomi_playroom_temperature:
-            friendly_name: "Playroom temperature"
+            friendly_name: "Playroom Xiaomi temperature"
             value_template: '{{ states.fan.playroom_xiaomi.attributes.temperature|default(0) }}'
             unit_of_measurement: "℃"
             icon_template: mdi:thermometer
         xiaomi_playroom_humidity:
-            friendly_name: "Playroom humidity"
+            friendly_name: "Playroom Xiaomi humidity"
             value_template: '{{ states.fan.playroom_xiaomi.attributes.humidity|default(0) }}'
             unit_of_measurement: "%"
+        xiaomi_playroom_mode:
+            friendly_name: "Playroom Xiaomi mode"
+            value_template: '{{ states.fan.playroom_xiaomi.attributes.mode }}'
+            
+        xiaomi_living_room_humidifier_mode:
+            friendly_name: "Living Room Xiaomi Humidifier mode"
+            value_template: '{{ states.fan.living_room_humidifier.attributes.mode }}'
+            
+        spa_temperature_with_offset:
+            friendly_name: "SPA Temperature"
+            value_template: '{{ states.sensor.sonoff_10005bb9e1_temperature.state | int + 2}}'
     
   - platform: rest
     resource: !secret looko2_api_url_with_token

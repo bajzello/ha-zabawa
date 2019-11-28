@@ -1,12 +1,12 @@
-- alias: "PLAYGROUND"
-  trigger:
-    platform: time_pattern
-    hours: "/99999"
-  action:
-    - service: fan.set_speed
-      data:
-        entity_id: fan.living_room_humidifier
-        speed: high
+# - alias: "PLAYGROUND"
+#   trigger:
+#     platform: time_pattern
+#     hours: "/99999"
+#   action:
+#     - service: fan.set_speed
+#       data:
+#         entity_id: fan.living_room_humidifier
+#         speed: high
         
 
 #do it on boot so sensor will be picked up by generic thermostat as it initializes later than him
@@ -58,9 +58,14 @@
 
 - alias: "Living Room: Air quality"
   trigger:
-    platform: time_pattern
-    minutes: "/15"
+    - platform: time_pattern
+      minutes: "/15"
+     # to invoke automation whenever speed was changed as it will always turn Xiaomi on
+    - platform: state
+      entity_id: sensor.xiaomi_pro_mode
   action:
+    # small delay to make sure that device turned on my changing the speed will become ready to get a new order from this automation and HA has up2date state
+    - delay: '00:00:30'
     - service_template: >
         {% if states.sensor.xiaomi_pro_aqi.state | float > states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.livingroom_xiaomi', 'off') %}
             fan.turn_on
@@ -73,9 +78,14 @@
 
 - alias: "Garage: Air quality"
   trigger:
-    platform: time_pattern
-    minutes: "/15"
+    - platform: time_pattern
+      minutes: "/15"
+      # to invoke automation whenever speed was changed as it will always turn Xiaomi on
+    - platform: state
+      entity_id: sensor.xiaomi_garage_mode
   action:
+    # small delay to make sure that device turned on my changing the speed will become ready to get a new order from this automation and HA has up2date state
+    - delay: '00:00:30'
     - service_template: >
         {% if states.sensor.xiaomi_garage_aqi.state | float > states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.garage_xiaomi', 'off') %}
             fan.turn_on
@@ -88,9 +98,14 @@
         
 - alias: "Bedroom: Air quality"
   trigger:
-    platform: time_pattern
-    minutes: "/15"
+    - platform: time_pattern
+      minutes: "/99"
+      # to invoke automation whenever speed was changed as it will always turn Xiaomi on
+    - platform: state
+      entity_id: sensor.xiaomi_bedroom_mode
   action:
+    # small delay to make sure that device turned on my changing the speed will become ready to get a new order from this automation and HA has up2date state
+    - delay: '00:00:10'
     - service_template: >
         {% if states.sensor.xiaomi_bedroom_aqi.state | float > states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.bedroom_xiaomi', 'off') %}
             fan.turn_on
@@ -103,9 +118,14 @@
         
 - alias: "Kidsroom: Air quality"
   trigger:
-    platform: time_pattern
-    minutes: "/15"
+    - platform: time_pattern
+      minutes: "/15"
+      # to invoke automation whenever speed was changed as it will always turn Xiaomi on
+    - platform: state
+      entity_id: sensor.xiaomi_kidsroom_mode
   action:
+    # small delay to make sure that device turned on my changing the speed will become ready to get a new order from this automation and HA has up2date state
+    - delay: '00:00:30'
     - service_template: >
         {% if states.sensor.xiaomi_kidsroom_aqi.state | float > states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.kidsroom_xiaomi', 'off') %}
             fan.turn_on
@@ -118,9 +138,14 @@
       
 - alias: "Playroom: Air quality"
   trigger:
-    platform: time_pattern
-    minutes: "/15"
+    - platform: time_pattern
+      minutes: "/15"
+      # to invoke automation whenever speed was changed as it will always turn Xiaomi on
+    - platform: state
+      entity_id: sensor.xiaomi_playroom_mode
   action:
+    # small delay to make sure that device turned on my changing the speed will become ready to get a new order from this automation and HA has up2date state
+    - delay: '00:00:30'
     - service_template: >
         {% if states.sensor.xiaomi_playroom_aqi.state | float > states.input_number.max_aqi_for_xiaomi.state | float and is_state('fan.playroom_xiaomi', 'off') %}
             fan.turn_on
@@ -133,9 +158,14 @@
 
 - alias: "Living Room: Humidity"
   trigger:
-    platform: time_pattern
-    minutes: "/15"
+    - platform: time_pattern
+      minutes: "/15"
+      # to invoke automation whenever speed was changed as it will always turn Xiaomi on
+    - platform: state
+      entity_id: sensor.xiaomi_living_room_humidifier_mode
   action:
+    # small delay to make sure that device turned on my changing the speed will become ready to get a new order from this automation and HA has up2date state
+    - delay: '00:00:30'
     - service_template: >
         {% if states.sensor.humidity_158d00027867c3.state | float > states.input_number.max_humidity.state | float and states.fan.living_room_humidifier.state  == 'on' %}
             fan.turn_off
@@ -245,13 +275,97 @@
             {{ '[AUTO] --- Keep max clean only when nobody home --- nobody_home: ' + states.input_boolean.nobody_home.state}}
         level: warning
         
-    - service_template: >
-        {% if is_state('input_boolean.nobody_home', 'on') %}
-            script.turn_on_max_cleaning
-        {% else %}
-            script.turn_off_max_cleaning
-        {% endif %}
+    - service: input_boolean.toggle
+      data:
+        entity_id: input_boolean.max_clean
 
+- alias: "Turn on max cleaning when max clean flag turned on"
+  trigger:
+    platform: state
+    entity_id: input_boolean.max_clean
+    to: 'on'
+  action:
+    # Living Room
+    - service: fan.set_speed
+      data:
+        entity_id: fan.livingroom_xiaomi
+        speed: favorite
+        
+    # Bedroom
+    - service: fan.set_speed
+      data:
+        entity_id: fan.bedroom_xiaomi
+        speed: favorite
+        
+    # Kidsroom
+    - service: fan.set_speed
+      data:
+        entity_id: fan.kidsroom_xiaomi
+        speed: favorite    
+    
+    # Playroom
+    - service: fan.set_speed
+      data:
+        entity_id: fan.playroom_xiaomi
+        speed: favorite
+    
+    # Garage
+    - service: fan.set_speed
+      data:
+        entity_id: fan.garage_xiaomi
+        speed: favorite
+        
+    # Living Room Humidifier
+    - service: fan.set_speed
+      data:
+        entity_id: fan.living_room_humidifier
+        speed: high
+    
+    # invoking many automations here was unrealiable as a solution to set xiaomi device to appropriate state as changing speed always turns it on
+
+- alias: "Turn off max cleaning when max clean flag turned on"
+  trigger:
+    platform: state
+    entity_id: input_boolean.max_clean
+    to: 'off'
+  action:
+    # Living Room
+    - service: fan.set_speed
+      data:
+        entity_id: fan.livingroom_xiaomi
+        speed: silent
+    
+    # Bedroom
+    - service: fan.set_speed
+      data:
+        entity_id: fan.bedroom_xiaomi
+        speed: silent
+        
+    # Kids Room
+    - service: fan.set_speed
+      data:
+        entity_id: fan.kidsroom_xiaomi
+        speed: silent
+
+    #Playroom
+    - service: fan.set_speed
+      data:
+        entity_id: fan.playroom_xiaomi
+        speed: silent
+        
+    # Garage
+    - service: fan.set_speed
+      data:
+        entity_id: fan.garage_xiaomi
+        speed: auto
+    
+    #Living Room Humidifier
+    - service: fan.set_speed
+      data:
+        entity_id: fan.living_room_humidifier
+        speed: silent
+
+    # invoking many automations here was unrealiable as a solution to set xiaomi device to appropriate state as changing speed always turns it on
 
 - alias: "Notify when SPA Machinery temp below alert value"
   trigger:
