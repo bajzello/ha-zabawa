@@ -61,7 +61,7 @@ climate:
     target_sensor: sensor.spa_temperature_with_offset
     min_temp: 20
     max_temp: 45
-    target_temp: 37
+    target_temp: 36
     cold_tolerance: 1
     hot_tolerance: 1
     min_cycle_duration:
@@ -109,8 +109,14 @@ input_boolean:
   nobody_home:
     name: Nikogo nie ma w domu
     initial: false
+  everyone_asleep:
+    name: Wszyscy spia
+    initial: false
   max_clean:
-    name: Max czyszczenie wlaczone
+    name: Max czyszczenie
+    initial: false
+  night_clean:
+    name: Nocne czyszczenie
     initial: false
 
 input_number:
@@ -138,6 +144,13 @@ input_number:
     min: 1
     max: 50
     mode: box
+  asleep_ilumination_threshold:
+    name: Asleep Ilumination Threshold
+    initial: 15
+    min: 1
+    max: 1000
+    mode: box
+
     
 input_datetime:
   bathroom_lights_on_time:
@@ -323,6 +336,11 @@ sensor:
         spa_temperature_with_offset:
             friendly_name: "SPA Temperature"
             value_template: '{{ states.sensor.sonoff_10005bb9e1_temperature.state | int + 2}}'
+            
+        living_room_humidifier_water_level:
+            friendly_name: "Humidifier Water Level"
+            value_template: '{{ ((states.fan.living_room_humidifier.attributes.depth | int / 130) * 100) | round(0) }}'
+            unit_of_measurement: "%"
     
   - platform: rest
     resource: !secret looko2_api_url_with_token
