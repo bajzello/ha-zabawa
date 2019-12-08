@@ -150,6 +150,12 @@ input_number:
     min: 1
     max: 1000
     mode: box
+  alert_humidifier_water_level:
+    name: Alert Water Level for Xiaomi Humidifier
+    initial: 10
+    min: 1
+    max: 100
+    mode: box
 
     
 input_datetime:

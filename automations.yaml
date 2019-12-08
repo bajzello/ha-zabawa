@@ -456,5 +456,17 @@
       data:
         message: "HA-Zabawa - SPA Machinery Temperature"
         title: "Temperature: {{ states.sensor.temperature_158d0002b87fdd.state }} is below threshold ({{ states.input_number.min_alert_spa_machinery_temperature.state }})" 
+
+- alias: "Notify when Xiaomi Humidifier water level below alert value"
+  trigger:
+    platform: template
+    value_template: "{{ states.sensor.living_room_humidifier_water_level.state | float < states.input_number.alert_humidifier_water_level.state | float }}"
+  action:
+    - condition: template
+      value_template: "{{ states.sensor.living_room_humidifier_water_level.state | float < states.input_number.alert_humidifier_water_level.state | float }}"
+    - service: notify.android_lukasz
+      data:
+        message: "HA-Zabawa - Xiaomi Humidifier Water Level"
+        title: "Xiaomi Humidifier Water Level: {{ states.sensor.living_room_humidifier_water_level.state }} is below threshold ({{ states.input_number.alert_humidifier_water_level.state }})" 
       
       
