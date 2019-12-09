@@ -1,12 +1,17 @@
-# - alias: "PLAYGROUND"
-#   trigger:
-#     platform: time_pattern
-#     hours: "/99999"
-#   action:
-#     - service: fan.set_speed
-#       data:
-#         entity_id: fan.living_room_humidifier
-#         speed: high
+
+# FINISH ONCE THERE IS A SONOFF PLUG ABLE TO RESTART AQUARA GATEWAY AS THE MAIN SOURCE OF GETTING OUT OF SYNC and then restarting it and then HA should solve it
+# humidifier xiaomi can also cause issues - check that as well but this one seems to heal itself
+- alias: "PLAYGROUND - RESTART HA"
+  trigger:
+    platform: time_pattern
+    hours: "/99999"
+#   conditions:
+#     - condition: or
+#       conditions:
+#         - condition: template
+#           value_template: "{{ states.sensor.humidity_158d0002b6ca82.state | float < states.input_number.min_humidity.state | float }}"
+  action:
+    - service: homeassistant.restart
         
 
 - alias: "Entrance external lights on between Setting and Rising"
@@ -304,7 +309,38 @@
     data:
         entity_id: input_boolean.night_clean
         
-- alias: "Activate and deactivate night cleaning"
+# Humidifier has to be separate as it's dependable whether it can be controlled as it requires to have water to change speed without errors
+- alias: "Activate and deactivate night cleaning - Humidifier"
+  trigger:
+    platform: state
+    entity_id: input_boolean.night_clean
+  action:
+    # first set silent mode and then if night cleaning flag is on turn on night cleaning
+    # that way one automation covers both turn on and off of night cleaning
+      
+    # Before doing any interactions with humidifier check if there is water in it as it will fail otherwise
+    - condition: numeric_state
+      entity_id: sensor.living_room_humidifier_water_level
+      above: 10
+      
+    #Living Room Humidifier
+    - service: fan.set_speed
+      data:
+        entity_id: fan.living_room_humidifier
+        speed: silent
+        
+    - condition: template
+      value_template: "{{ states.input_boolean.night_clean.state == 'on' }}"
+        
+    # Living Room Humidifier
+    - service: fan.set_speed
+      data:
+        entity_id: fan.living_room_humidifier
+        speed: high
+        
+# Xiaomi Air Purifier 2 Garage: auto <-> favorite
+# Xiaomi Air Purifier Pro Living Room: silent <-> auto
+- alias: "Activate and deactivate night cleaning - All the rest"
   trigger:
     platform: state
     entity_id: input_boolean.night_clean
@@ -317,6 +353,12 @@
       data:
         entity_id: fan.garage_xiaomi
         speed: auto
+        
+    # Living Room
+    - service: fan.set_speed
+      data:
+        entity_id: fan.livingroom_xiaomi
+        speed: silent
 
     - condition: template
       value_template: "{{ states.input_boolean.night_clean.state == 'on' }}"
@@ -326,26 +368,12 @@
       data:
         entity_id: fan.garage_xiaomi
         speed: favorite
-      
-    # Before doing any interactions with humidifier check if there is water in it as it will fail otherwise
-    - condition: numeric_state
-      entity_id: sensor.living_room_humidifier_water_level
-      above: 10
-      
-    # Garage
+        
+    # Living Room
     - service: fan.set_speed
       data:
-        entity_id: fan.garage_xiaomi
-        speed: favorite
-        
-    - condition: template
-      value_template: "{{ states.input_boolean.night_clean.state == 'on' }}"
-        
-    # Living Room Humidifier
-    - service: fan.set_speed
-      data:
-        entity_id: fan.living_room_humidifier
-        speed: high
+        entity_id: fan.livingroom_xiaomi
+        speed: auto
 
 - alias: "Turn on max cleaning when max clean flag turned on"
   trigger:
@@ -386,7 +414,7 @@
     # Before doing any interactions with humidifier check if there is water in it as it will fail otherwise
     - condition: numeric_state
       entity_id: sensor.living_room_humidifier_water_level
-      above: 10  
+      above: 10
         
     # Living Room Humidifier
     - service: fan.set_speed
@@ -461,6 +489,8 @@
   trigger:
     platform: template
     value_template: "{{ states.sensor.living_room_humidifier_water_level.state | float < states.input_number.alert_humidifier_water_level.state | float }}"
+    #workaround is state was often unavailable causing alert - don't know what was the reason of that
+    for: "00:01:00"
   action:
     - condition: template
       value_template: "{{ states.sensor.living_room_humidifier_water_level.state | float < states.input_number.alert_humidifier_water_level.state | float }}"
