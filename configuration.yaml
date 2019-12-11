@@ -345,7 +345,7 @@ sensor:
             
         living_room_humidifier_water_level:
             friendly_name: "Humidifier Water Level"
-            value_template: '{{ ((states.fan.living_room_humidifier.attributes.depth | int / 130) * 100) | round(0) }}'
+            value_template: '{{ ((states.fan.living_room_humidifier.attributes.depth | int / 125) * 100) | round(0) }}'
             unit_of_measurement: "%"
     
   - platform: rest

@@ -22,7 +22,7 @@
       value_template: "{{ state.attributes.elevation }}"
       # Can be a positive or negative number
       #below: -4.0
-      below: -2.0
+      below: -5.0
       
       # Dawn
     - platform: numeric_state
@@ -30,10 +30,10 @@
       value_template: "{{ state.attributes.elevation }}"
       # Can be a positive or negative number
       #above: -4.0
-      above: -2.0
+      above: -5.0
   action:
   - service_template: >
-        {% if state_attr('sun.sun', 'elevation') | float < -4  %}
+        {% if state_attr('sun.sun', 'elevation') | float < -5  %}
             switch.turn_on
         {% else %}
             switch.turn_off
@@ -312,9 +312,17 @@
 # Humidifier has to be separate as it's dependable whether it can be controlled as it requires to have water to change speed without errors
 - alias: "Activate and deactivate night cleaning - Humidifier"
   trigger:
-    platform: state
-    entity_id: input_boolean.night_clean
+    # trigger on night_clean flag change
+    - platform: state
+      entity_id: input_boolean.night_clean
+    # or every 15minutes to check if change needed as humidifier might due to lack of water get out of sync
+    - platform: time_pattern
+      minutes: "/15"
   action:
+    # check if any action has be invoked (needed as there is timing trigger now)
+    - condition: template
+      value_template: "{{ (states.input_boolean.night_clean.state == 'on' and  states.fan.living_room_humidifier.attributes.speed != 'High') or (states.input_boolean.night_clean.state == 'off' and  states.fan.living_room_humidifier.attributes.speed != 'Silent')}}"
+  
     # first set silent mode and then if night cleaning flag is on turn on night cleaning
     # that way one automation covers both turn on and off of night cleaning
       
@@ -375,6 +383,8 @@
         entity_id: fan.livingroom_xiaomi
         speed: auto
 
+# TODO: Add timer trigger and check if actions needed as xiaomi humidifier might get out of sync as it won't change speed if has no water
+# TODO: Change to similar way to the night mode
 - alias: "Turn on max cleaning when max clean flag turned on"
   trigger:
     platform: state
@@ -424,6 +434,8 @@
     
     # invoking many automations here was unrealiable as a solution to set xiaomi device to appropriate state as changing speed always turns it on
 
+# TODO: Add timer trigger and check if actions needed as xiaomi humidifier might get out of sync as it won't change speed if has no water
+# TODO: Change to similar way to the night mode
 - alias: "Turn off max cleaning when max clean flag turned off"
   trigger:
     platform: state
