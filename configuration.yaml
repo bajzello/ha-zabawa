@@ -10,6 +10,9 @@ default_config:
 
 #comment testing git-pull addon in hassio
 
+lovelace:
+  mode: yaml
+
 # Text to speech
 tts:
   - platform: google_translate

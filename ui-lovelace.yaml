@@ -1,0 +1,364 @@
+title: Zabawa
+views:
+  - path: default_view
+    title: Home
+    badges:
+      - entity: binary_sensor.gate
+      - entity: binary_sensor.updater
+      - entity: binary_sensor.water_leak_sensor_158d0002774172
+      - entity: binary_sensor.smoke_sensor_158d0002cb5ab1
+      - entity: binary_sensor.water_leak_sensor_158d00028076c9
+      - entity: binary_sensor.cube_158d000289d732
+      - entity: binary_sensor.door_window_sensor_158d0002e411aa
+      - entity: binary_sensor.remote_ui
+      - entity: person.lukasz
+      - entity: device_tracker.google_maps_102671172042975404481
+      - entity: device_tracker.google_maps_107747480305280073082
+      - entity: device_tracker.google_maps_113206223653696792209
+      - entity: device_tracker.automower_l_183301040_182531245
+      - entity: sensor.xiaomi_pro_humidity
+      - entity: sensor.xiaomi_playroom_mode
+      - entity: sensor.xiaomi_pro_mode
+      - entity: sensor.xiaomi_playroom_humidity
+      - entity: sensor.xiaomi_pro_temperature
+      - entity: sensor.xiaomi_playroom_aqi
+      - entity: sensor.xiaomi_playroom_temperature
+      - entity: sensor.xiaomi_pro_aqi
+      - entity: sensor.xiaomi_kidsroom_mode
+      - entity: sensor.xiaomi_kidsroom_humidity
+      - entity: sensor.xiaomi_kidsroom_temperature
+      - entity: sensor.xiaomi_kidsroom_aqi
+      - entity: sensor.xiaomi_bedroom_humidity
+      - entity: sensor.xiaomi_bedroom_mode
+      - entity: sensor.xiaomi_bedroom_temperature
+      - entity: sensor.xiaomi_bedroom_aqi
+      - entity: sensor.xiaomi_garage_humidity
+      - entity: sensor.xiaomi_garage_mode
+      - entity: sensor.xiaomi_garage_temperature
+      - entity: sensor.living_room_humidifier_water_level
+      - entity: sensor.xiaomi_living_room_humidifier_mode
+      - entity: sensor.xiaomi_garage_aqi
+      - entity: sensor.spa_temperature_with_offset
+      - entity: sensor.time
+      - entity: sensor.xiaomi_air_monitor_living_room
+      - entity: sensor.pm10
+      - entity: sensor.pm1
+      - entity: sensor.pm2_5
+      - entity: sensor.gate_closed
+      - entity: sensor.travis_build_status
+      - entity: sensor.sonoff_10005bb9e1_temperature
+      - entity: sensor.pressure_158d0002b6ca82
+      - entity: sensor.temperature_158d0002b87fdd
+      - entity: sensor.temperature_158d00027867c3
+      - entity: sensor.humidity_158d0002b87fdd
+      - entity: sensor.pressure_158d0002b87fdd
+      - entity: sensor.humidity_158d00027867c3
+      - entity: sensor.pressure_158d00027867c3
+      - entity: sensor.illumination_7c49ebb189e3
+      - entity: sensor.temperature_158d0002b6ca82
+      - entity: sensor.humidity_158d0002b6ca82
+      - entity: sensor.hacs
+      - entity: sensor.playroom_temperature
+      - entity: sensor.bathroom_temperature
+      - entity: sensor.playroom_humidity
+      - entity: sensor.bathroom_humidity
+      - entity: sensor.playroom_power
+      - entity: sensor.bathroom_power
+      - entity: sensor.playroom_link
+      - entity: sensor.bathroom_link
+      - entity: sensor.playroom_heating
+      - entity: sensor.bathroom_heating
+      - entity: sensor.playroom_tado_mode
+      - entity: sensor.bathroom_tado_mode
+      - entity: sensor.playroom_overlay
+      - entity: sensor.bathroom_overlay
+      - entity: sensor.kids_room_temperature
+      - entity: sensor.vestibule_temperature
+      - entity: sensor.kids_room_humidity
+      - entity: sensor.vestibule_humidity
+      - entity: sensor.kids_room_power
+      - entity: sensor.vestibule_power
+      - entity: sensor.kids_room_link
+      - entity: sensor.vestibule_link
+      - entity: sensor.kids_room_heating
+      - entity: sensor.vestibule_heating
+      - entity: sensor.kids_room_tado_mode
+      - entity: sensor.vestibule_tado_mode
+      - entity: sensor.kids_room_overlay
+      - entity: sensor.vestibule_overlay
+      - entity: sensor.office_temperature
+      - entity: sensor.living_room_temperature
+      - entity: sensor.boiler_room_temperature
+      - entity: sensor.office_humidity
+      - entity: sensor.living_room_humidity
+      - entity: sensor.boiler_room_humidity
+      - entity: sensor.office_power
+      - entity: sensor.living_room_power
+      - entity: sensor.boiler_room_power
+      - entity: sensor.office_link
+      - entity: sensor.living_room_link
+      - entity: sensor.boiler_room_link
+      - entity: sensor.office_heating
+      - entity: sensor.living_room_heating
+      - entity: sensor.boiler_room_heating
+      - entity: sensor.office_tado_mode
+      - entity: sensor.living_room_tado_mode
+      - entity: sensor.boiler_room_tado_mode
+      - entity: sensor.office_overlay
+      - entity: sensor.living_room_overlay
+      - entity: sensor.boiler_room_overlay
+      - entity: sensor.wardrobe_room_temperature
+      - entity: sensor.bedroom_temperature
+      - entity: sensor.zabawa_tado_bridge_status
+      - entity: sensor.wardrobe_room_humidity
+      - entity: sensor.bedroom_humidity
+      - entity: sensor.wardrobe_room_power
+      - entity: sensor.bedroom_power
+      - entity: sensor.wardrobe_room_link
+      - entity: sensor.bedroom_link
+      - entity: sensor.wardrobe_room_heating
+      - entity: sensor.bedroom_heating
+      - entity: sensor.wardrobe_room_tado_mode
+      - entity: sensor.bedroom_tado_mode
+      - entity: sensor.wardrobe_room_overlay
+      - entity: sensor.bedroom_overlay
+      - entity: sun.sun
+    cards:
+      - type: entities
+        entities:
+          - automation.notify_when_spa_machinery_temp_below_alert_value
+          - >-
+            automation.notify_when_xiaomi_humidifier_water_level_below_alert_value
+          - automation.system_travis_build_failed
+          - automation.system_travis_build_passed_git_pull_hassio_restart
+          - automation.playground_restart_ha
+          - automation.entrance_external_lights_on_between_setting_and_rising
+          - automation.on_boot_refresh_desired_spa_temperature
+          - automation.control_nobody_home_using_aqara_magic_cube
+          - automation.turn_on_bathroom_shelves_lights_on_desired_time
+          - automation.turn_off_max_cleaning_when_max_clean_flag_turned_off
+          - automation.living_room_air_quality
+          - automation.garage_air_quality
+          - automation.bedroom_air_quality
+          - automation.kidsroom_air_quality
+          - automation.playroom_air_quality
+          - automation.living_room_humidity
+          - automation.upstairs_humidity
+          - automation.calculate_if_nobody_is_at_home
+          - automation.calculate_if_everybody_asleep
+          - automation.max_clean_based_on_nobody_home
+          - automation.night_clean_based_on_everyone_asleep
+          - automation.activate_and_deactivate_night_cleaning_humidifier
+          - automation.activate_and_deactivate_night_cleaning_all_the_rest
+          - automation.turn_on_max_cleaning_when_max_clean_flag_turned_on
+        title: Automatyzacja
+      - type: picture-entity
+        entity: camera.generic_camera
+      - type: thermostat
+        entity: climate.spa
+      - type: thermostat
+        entity: climate.wardrobe_room
+      - type: thermostat
+        entity: climate.living_room
+      - type: thermostat
+        entity: climate.bathroom
+      - type: thermostat
+        entity: climate.bedroom
+      - type: thermostat
+        entity: climate.vestibule
+      - type: thermostat
+        entity: climate.playroom
+      - type: thermostat
+        entity: climate.boiler_room
+      - type: thermostat
+        entity: climate.children_s_room
+      - type: thermostat
+        entity: climate.office
+      - type: entities
+        entities:
+          - cover.gateway
+        title: Pokrywa
+      - type: entities
+        entities:
+          - fan.garage_xiaomi
+          - fan.kidsroom_xiaomi
+          - fan.bedroom_xiaomi
+          - fan.playroom_xiaomi
+          - fan.living_room_humidifier
+          - fan.livingroom_xiaomi
+        title: Wentylator
+      - type: entities
+        entities:
+          - input_boolean.everyone_asleep
+          - input_boolean.night_clean
+          - input_boolean.nobody_home
+          - input_boolean.max_clean
+        title: Pole logiczne
+      - type: entities
+        entities:
+          - input_datetime.bathroom_lights_on_time
+        title: Pole daty czasu
+      - type: entities
+        entities:
+          - input_number.alert_humidifier_water_level
+          - input_number.max_aqi_for_xiaomi
+          - input_number.min_humidity
+          - input_number.max_humidity
+          - input_number.min_alert_spa_machinery_temperature
+          - input_number.asleep_ilumination_threshold
+        title: Pole numeryczne
+      - type: entities
+        entities:
+          - light.gateway_light_7c49ebb189e3
+        title: Światło
+      - type: entities
+        entities:
+          - script.turn_off_max_cleaning
+          - script.turn_on_max_cleaning
+        title: Skrypt
+      - type: entities
+        entities:
+          - switch.sonoff_100075c3f8
+          - switch.sonoff_1000a4af39
+          - switch.sonoff_1000a42461
+          - switch.sonoff_10002befc0
+          - switch.sonoff_10005bb9e1
+          - switch.sonoff_100065381d
+        #   - switch.wall_switch_ln_right_158d0004507e83
+        #   - switch.wall_switch_ln_left_158d0004507e83
+          - switch.nawilzacz
+        title: Przełącznik
+      - type: entities
+        entities:
+          - vacuum.henry
+        title: Odkurzacz
+  - title: New
+    cards:
+     - type: vertical-stack
+       title: Powietrze
+       cards: 
+         - type: horizontal-stack
+           cards:
+            - type: sensor
+              name: PM1
+              icon: mdi:border-outside
+              entity: sensor.pm1
+            - type: sensor
+              name: PM2.5
+              icon: mdi:border-outside
+              entity: sensor.pm2_5
+            - type: sensor
+              name: PM10
+              icon: mdi:border-outside
+              entity: sensor.pm10
+         - type: horizontal-stack
+           cards:
+            - type: sensor
+              name: Gabinet
+              icon: mdi:air-filter
+              entity: sensor.xiaomi_air_monitor_living_room
+            - type: sensor
+              name: Salon
+              icon: mdi:air-filter
+              entity: sensor.xiaomi_pro_aqi
+            - type: sensor
+              name: Bawialnia
+              icon: mdi:air-filter
+              entity: sensor.xiaomi_playroom_aqi
+         - type: horizontal-stack
+           cards:
+            - type: sensor
+              name: Sypialnia
+              icon: mdi:air-filter
+              entity: sensor.xiaomi_bedroom_aqi
+            - type: sensor
+              name: Alicji
+              icon: mdi:air-filter
+              entity: sensor.xiaomi_kidsroom_aqi
+            - type: sensor
+              name: Garaż
+              icon: mdi:air-filter
+              entity: sensor.xiaomi_garage_aqi
+         - type: glance
+           title: Oczyszczacze
+           show_state: false
+           entities:
+              - entity: fan.livingroom_xiaomi
+                name: Salon
+                icon: mdi:air-purifier
+                tap_action: 
+                    action: toggle
+              - entity: fan.playroom_xiaomi
+                name: Bawialnia
+                icon: mdi:air-purifier
+                tap_action: 
+                    action: toggle
+              - entity: fan.bedroom_xiaomi
+                name: Sypialnia
+                icon: mdi:air-purifier
+                tap_action: 
+                    action: toggle
+              - entity: fan.kidsroom_xiaomi
+                name: Alicji
+                icon: mdi:air-purifier
+                tap_action: 
+                    action: toggle
+              - entity: fan.garage_xiaomi
+                name: Garaż
+                icon: mdi:air-purifier
+                tap_action: 
+                    action: toggle
+         - type: glance
+           title: Nawilżacze
+           show_state: false
+           entities:
+            - entity: fan.living_room_humidifier
+              name: Salon
+              icon: mdi:air-humidifier
+              tap_action: 
+                action: toggle
+            - entity: switch.nawilzacz
+              name: Piętro
+              icon: mdi:air-humidifier
+              tap_action:
+                action: toggle
+     - type: glance
+       title: Oświetlenie
+       show_state: false
+       entities:
+          - entity: switch.sonoff_1000a42461
+            name: Światło wejściowe
+            icon: mdi:outdoor-lamp
+            tap_action:
+                action: toggle
+          - entity: switch.sonoff_1000a4af39
+            name: Łazienka półki
+            icon: mdi:lightbulb
+            tap_action:
+                action: toggle
+     - type: glance
+       title: Bania
+       show_state: false
+       entities:
+          - entity: switch.sonoff_100075c3f8
+            name: Bania pompa
+            icon: mdi:water-pump
+            tap_action:
+                action: toggle
+          - entity: switch.sonoff_10005bb9e1
+            name: Bania grzałka
+            icon: mdi:radiator
+            tap_action:
+                action: toggle
+     - type: glance
+       title: Sprzęt
+       show_state: false
+       entities:
+          - entity: switch.sonoff_10002befc0
+            name: Rpi3+
+            tap_action:
+                action: toggle
+          - entity: switch.sonoff_100065381d
+            name: Aqara gateway
+            tap_action:
+                action: toggle
