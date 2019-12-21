@@ -22,15 +22,17 @@ tts:
   
 google_assistant:
   project_id: ha-assistant-4a083
-  api_key: !secret google_assistant_api_key
-  #service_account: !include SERVICE_ACCOUNT.JSON
+#   api_key: !secret google_assistant_api_key
+  service_account: !include google_service_account.json
   # report state requires service account to be configured
-  #report_state: true
+  report_state: true
   expose_by_default: false
+  secure_devices_pin: !secret google_assistant_secure_devices_pin
   exposed_domains:
     - switch
     - light
     - climate
+    - cover
   entity_config:
     # lights
     light.bathroom_light:
@@ -73,7 +75,13 @@ google_assistant:
             - Bania
             - Banii
             - Spa
-            
+    #covers
+    cover.gateway:
+        name: Brama
+        expose: true
+        room: Ogródek przed domem
+        aliases:
+            - Brama wjazdowa
 
 
 group: !include groups.yaml

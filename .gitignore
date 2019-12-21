@@ -9,3 +9,5 @@ known_devices.yaml
 .ssh/
 .cloud/
 tts/
+google_service_account.json
+
