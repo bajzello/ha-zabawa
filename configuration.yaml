@@ -124,6 +124,9 @@ input_boolean:
   night_clean:
     name: Nocne czyszczenie
     initial: false
+  speaking_home:
+    name: Dom mówi
+    initial: false
 
 input_number:
   max_aqi_for_xiaomi:

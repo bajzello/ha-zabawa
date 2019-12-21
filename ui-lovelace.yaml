@@ -124,6 +124,10 @@ views:
       - entity: sensor.bedroom_overlay
       - entity: sun.sun
     cards:
+      - type: media-control
+        entity: media_player.living_room_display
+      - type: media-control
+        entity: media_player.living_room_speaker
       - type: entities
         entities:
           - automation.notify_when_spa_machinery_temp_below_alert_value
@@ -152,6 +156,7 @@ views:
           - automation.activate_and_deactivate_night_cleaning_all_the_rest
           - automation.turn_on_max_cleaning_when_max_clean_flag_turned_on
           - automation.test_receiving_ifttt_event_as_ha_event
+          - automation.speak_through_google_cast
         title: Automatyzacja
       - type: picture-entity
         entity: camera.generic_camera
@@ -194,6 +199,7 @@ views:
           - input_boolean.night_clean
           - input_boolean.nobody_home
           - input_boolean.max_clean
+          - input_boolean.speaking_home
         title: Pole logiczne
       - type: entities
         entities:

@@ -13,6 +13,17 @@
   action:
     - service: homeassistant.restart
     
+- alias: Speak through Google Cast
+  trigger:
+    platform: time_pattern
+    hours: "/99999"
+  action:
+    service: tts.google_translate_say
+    entity_id: media_player.living_room_display
+    data:
+        message: 'Dzień dobry królewno Alicjo. Pięknie dzisiaj wyglądasz'
+        language: 'pl'
+    
 - alias: Test receiving IFTTT event as HA event
   trigger:
     - platform: event
@@ -515,11 +526,18 @@
     #workaround is state was often unavailable causing alert - don't know what was the reason of that
     for: "00:01:00"
   action:
+    # - condition: template
+    #   value_template: "{{ states.sensor.living_room_humidifier_water_level.state | float < states.input_number.alert_humidifier_water_level.state | float }}"
+    # - service: notify.android_lukasz
+    #   data:
+    #     message: "HA-Zabawa - Xiaomi Humidifier Water Level"
+    #     title: "Xiaomi Humidifier Water Level: {{ states.sensor.living_room_humidifier_water_level.state }} is below threshold ({{ states.input_number.alert_humidifier_water_level.state }})" 
     - condition: template
-      value_template: "{{ states.sensor.living_room_humidifier_water_level.state | float < states.input_number.alert_humidifier_water_level.state | float }}"
-    - service: notify.android_lukasz
-      data:
-        message: "HA-Zabawa - Xiaomi Humidifier Water Level"
-        title: "Xiaomi Humidifier Water Level: {{ states.sensor.living_room_humidifier_water_level.state }} is below threshold ({{ states.input_number.alert_humidifier_water_level.state }})" 
+      value_template: "{{ states.input_boolean.speaking_home.state == 'on' }}"
+    - service: tts.google_translate_say
+      entity_id: media_player.living_room_display
+      data_template:
+        message: 'Proszę uzupełnić wodę w nawilżaczu w salonie. Jej aktualny poziom to {{ states.sensor.living_room_humidifier_water_level.state }} procent'
+        language: 'pl'
       
       
