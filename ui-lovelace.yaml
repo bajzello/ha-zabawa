@@ -151,6 +151,7 @@ views:
           - automation.activate_and_deactivate_night_cleaning_humidifier
           - automation.activate_and_deactivate_night_cleaning_all_the_rest
           - automation.turn_on_max_cleaning_when_max_clean_flag_turned_on
+          - automation.test_receiving_ifttt_event_as_ha_event
         title: Automatyzacja
       - type: picture-entity
         entity: camera.generic_camera

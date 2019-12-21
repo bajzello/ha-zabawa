@@ -12,6 +12,17 @@
 #           value_template: "{{ states.sensor.humidity_158d0002b6ca82.state | float < states.input_number.min_humidity.state | float }}"
   action:
     - service: homeassistant.restart
+    
+- alias: Test receiving IFTTT event as HA event
+  trigger:
+    - platform: event
+      event_type: ifttt_webhook_received
+      event_data:
+        action: call_service
+  action:
+    service_template: '{{ trigger.event.data.service }}'
+    data_template:
+        entity_id: '{{ trigger.event.data.entity_id }}'
         
 
 - alias: "Entrance external lights on between Setting and Rising"
