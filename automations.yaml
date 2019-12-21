@@ -537,7 +537,7 @@
     - service: tts.google_translate_say
       entity_id: media_player.living_room_display
       data_template:
-        message: 'Proszę uzupełnić wodę w nawilżaczu w salonie. Jej aktualny poziom to {{ states.sensor.living_room_humidifier_water_level.state }} procent'
+        message: 'Poziom wody w nawilżaczu w salonie to {{ states.sensor.living_room_humidifier_water_level.state }} procent. Proszę uzupełnić.'
         language: 'pl'
       
       

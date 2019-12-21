@@ -239,7 +239,19 @@ views:
         entities:
           - vacuum.henry
         title: Odkurzacz
+
+  - title: cast
+    path: cast
+    cards:
+     - type: entities
+       entities:
+          - type: cast
+            view: new
+            entity_id: media_player.living_room_display
+            hide_if_unavailable: true
+        
   - title: New
+    path: new
     cards:
      - type: vertical-stack
        title: Powietrze
