@@ -26,12 +26,17 @@ google_assistant:
   #service_account: !include SERVICE_ACCOUNT.JSON
   # report state requires service account to be configured
   #report_state: true
+  expose_by_default: false
   exposed_domains:
-#    - switch
+    - switch
     - light
+    - climate
   entity_config:
+    # lights
     light.bathroom_light:
         name: Światło łazienka
+        expose: true
+        room: Łazienka
         aliases:
             - Światło łazienka
             - Półki łazienka
@@ -39,6 +44,8 @@ google_assistant:
             - Łazienka
     light.entrance_light:
         name: Światło wejściowe
+        expose: true
+        room: Ogródek przed domem
         aliases:
             - Światło wejściowe
             - Światło wejście
@@ -46,6 +53,8 @@ google_assistant:
             - Wejście
     light.gateway_light_7c49ebb189e3:
         name: Światło Aqara
+        expose: true
+        room: Salon
         aliases:
             - Światło Aqara
             - Światło Xiaomi
@@ -53,17 +62,19 @@ google_assistant:
             - Bramka Xiaomi
     group.all_lights:
         expose: true
-#   entity_config:
-#     switch.kitchen:
-#       name: CUSTOM_NAME_FOR_GOOGLE_ASSISTANT
-#       aliases:
-#         - BRIGHT_LIGHTS
-#         - ENTRY_LIGHTS
-#     light.living_room:
-#       expose: false
-#       room: LIVING_ROOM
-#     group.all_automations:
-#       expose: false
+    # climate
+    climate.spa:
+        name: Beczka
+        expose: true
+        room: Ogródek za domem
+        aliases:
+            - Beczka
+            - Beczki
+            - Bania
+            - Banii
+            - Spa
+            
+
 
 group: !include groups.yaml
 automation: !include automations.yaml
