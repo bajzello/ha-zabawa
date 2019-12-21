@@ -526,12 +526,12 @@
     #workaround is state was often unavailable causing alert - don't know what was the reason of that
     for: "00:01:00"
   action:
-    # - condition: template
-    #   value_template: "{{ states.sensor.living_room_humidifier_water_level.state | float < states.input_number.alert_humidifier_water_level.state | float }}"
-    # - service: notify.android_lukasz
-    #   data:
-    #     message: "HA-Zabawa - Xiaomi Humidifier Water Level"
-    #     title: "Xiaomi Humidifier Water Level: {{ states.sensor.living_room_humidifier_water_level.state }} is below threshold ({{ states.input_number.alert_humidifier_water_level.state }})" 
+    - condition: template
+      value_template: "{{ states.sensor.living_room_humidifier_water_level.state | float < states.input_number.alert_humidifier_water_level.state | float }}"
+    - service: notify.android_lukasz
+      data:
+        message: "HA-Zabawa - Xiaomi Humidifier Water Level"
+        title: "Xiaomi Humidifier Water Level: {{ states.sensor.living_room_humidifier_water_level.state }} is below threshold ({{ states.input_number.alert_humidifier_water_level.state }})" 
     - condition: template
       value_template: "{{ states.input_boolean.speaking_home.state == 'on' }}"
     - service: tts.google_translate_say
