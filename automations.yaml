@@ -1,16 +1,28 @@
 
 # FINISH ONCE THERE IS A SONOFF PLUG ABLE TO RESTART AQUARA GATEWAY AS THE MAIN SOURCE OF GETTING OUT OF SYNC and then restarting it and then HA should solve it
 # humidifier xiaomi can also cause issues - check that as well but this one seems to heal itself
-- alias: "PLAYGROUND - RESTART HA"
+- alias: "Restart Aqara and HA when integration interrupted"
   trigger:
     platform: time_pattern
-    hours: "/99999"
-#   conditions:
-#     - condition: or
-#       conditions:
-#         - condition: template
-#           value_template: "{{ states.sensor.humidity_158d0002b6ca82.state | float < states.input_number.min_humidity.state | float }}"
+    minutes: "/30"
+  condition:
+    - condition: or
+      conditions:
+        - condition: template
+          value_template: "{{ not(states.sensor.temperature_158d0002b87fdd | float > 0)}}"
   action:
+    - service: notify.android_lukasz
+      data:
+        message: "HA-Zabawa - Aqara Gateway Failure"
+        title: "HA-Zabawa" 
+    - service: switch.turn_off
+      data:
+        entity_id: switch.aqara_gateway
+    - delay: '00:00:15'
+    - service: switch.turn_on
+      data:
+        entity_id: switch.aqara_gateway
+    - delay: '00:01:00'
     - service: homeassistant.restart
     
 - alias: Speak through Google Cast

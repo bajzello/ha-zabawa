@@ -131,11 +131,10 @@ views:
       - type: entities
         entities:
           - automation.notify_when_spa_machinery_temp_below_alert_value
-          - >-
-            automation.notify_when_xiaomi_humidifier_water_level_below_alert_value
+          - automation.notify_when_xiaomi_humidifier_water_level_below_alert_value
           - automation.system_travis_build_failed
           - automation.system_travis_build_passed_git_pull_hassio_restart
-          - automation.playground_restart_ha
+          - automation.restart_aqara_and_ha_when_integration_interrupted
           - automation.entrance_external_lights_on_between_setting_and_rising
           - automation.on_boot_refresh_desired_spa_temperature
           - automation.control_nobody_home_using_aqara_magic_cube
