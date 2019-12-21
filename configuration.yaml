@@ -19,6 +19,51 @@ lovelace:
 # Text to speech
 tts:
   - platform: google_translate
+  
+google_assistant:
+  project_id: ha-assistant-4a083
+  api_key: !secret google_assistant_api_key
+  #service_account: !include SERVICE_ACCOUNT.JSON
+  # report state requires service account to be configured
+  #report_state: true
+  exposed_domains:
+#    - switch
+    - light
+  entity_config:
+    light.bathroom_light:
+        name: Światło łazienka
+        aliases:
+            - Światło łazienka
+            - Półki łazienka
+            - Oświetlenie łazienki
+            - Łazienka
+    light.entrance_light:
+        name: Światło wejściowe
+        aliases:
+            - Światło wejściowe
+            - Światło wejście
+            - Oświetlenie przed domem
+            - Wejście
+    light.gateway_light_7c49ebb189e3:
+        name: Światło Aqara
+        aliases:
+            - Światło Aqara
+            - Światło Xiaomi
+            - Bramka Aqara
+            - Bramka Xiaomi
+    group.all_lights:
+        expose: true
+#   entity_config:
+#     switch.kitchen:
+#       name: CUSTOM_NAME_FOR_GOOGLE_ASSISTANT
+#       aliases:
+#         - BRIGHT_LIGHTS
+#         - ENTRY_LIGHTS
+#     light.living_room:
+#       expose: false
+#       room: LIVING_ROOM
+#     group.all_automations:
+#       expose: false
 
 group: !include groups.yaml
 automation: !include automations.yaml
@@ -74,7 +119,14 @@ climate:
         minutes: 5
     initial_hvac_mode: "heat"
     precision: 1.0
-    
+
+light:
+  - platform: switch
+    name: Bathroom Light
+    entity_id: switch.sonoff_1000a4af39
+  - platform: switch
+    name: Entrance Light
+    entity_id: switch.sonoff_1000a42461
 
 automower:
   username: !secret husqvarna_username

@@ -217,6 +217,8 @@ views:
       - type: entities
         entities:
           - light.gateway_light_7c49ebb189e3
+          - light.bathroom_light
+          - light.entrance_light
         title: Światło
       - type: entities
         entities:
