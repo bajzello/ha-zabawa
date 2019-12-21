@@ -322,38 +322,54 @@ views:
               icon: mdi:air-humidifier
               tap_action:
                 action: toggle
-     - type: glance
-       title: Oświetlenie
-       show_state: false
-       entities:
-          - entity: switch.sonoff_1000a42461
-            name: Światło wejściowe
-            icon: mdi:outdoor-lamp
-            tap_action:
-                action: toggle
-          - entity: switch.sonoff_1000a4af39
-            name: Łazienka półki
-            icon: mdi:lightbulb
-            tap_action:
-                action: toggle
-     - type: glance
+     - type: vertical-stack
        title: Bania
-       show_state: false
-       entities:
+       cards:
+        - type: thermostat
+          entity: climate.spa
+        - type: glance
+          show_state: false
+          entities:
           - entity: switch.sonoff_100075c3f8
-            name: Bania pompa
+            name: Pompa
             icon: mdi:water-pump
             tap_action:
                 action: toggle
           - entity: switch.sonoff_10005bb9e1
-            name: Bania grzałka
+            name: Ogrzewanie
             icon: mdi:radiator
             tap_action:
                 action: toggle
-     - type: glance
+    
+     - type: horizontal-stack
+       title: Ogród
+       cards:
+        - type: entities
+          entities:
+          - cover.gateway
+    
+     - type: horizontal-stack
+       title: Oświetlenie
+       cards:
+        - type: glance
+          show_state: false
+          entities:
+            - entity: switch.sonoff_1000a42461
+              name: Światło wejściowe
+              icon: mdi:outdoor-lamp
+              tap_action:
+                action: toggle
+            - entity: switch.sonoff_1000a4af39
+              name: Łazienka półki
+              icon: mdi:lightbulb
+              tap_action:
+                action: toggle
+     - type: horizontal-stack
        title: Sprzęt
-       show_state: false
-       entities:
+       cards:
+        - type: glance
+          show_state: false
+          entities:
           - entity: switch.sonoff_10002befc0
             name: Rpi3+
             tap_action:
