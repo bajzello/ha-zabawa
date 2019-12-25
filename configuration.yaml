@@ -19,7 +19,18 @@ lovelace:
 # Text to speech
 tts:
   - platform: google_translate
-  
+
+google_pubsub:
+  project_id: ha-assistant-4a083
+  topic_name: ha-zabawa
+  credentials_json: "ha-pub-sub-publisher-service-account-key.json"
+  filter:
+    include_entities:
+        - sensor.pm1
+        - sensor.pm2_5
+        - sensor.pm10
+        - sensor.xiaomi_air_monitor_living_room
+
 google_assistant:
   project_id: ha-assistant-4a083
 #   api_key: !secret google_assistant_api_key
@@ -131,7 +142,7 @@ climate:
     target_sensor: sensor.spa_temperature_with_offset
     min_temp: 20
     max_temp: 45
-    target_temp: 36
+    target_temp: 28
     cold_tolerance: 1
     hot_tolerance: 1
     min_cycle_duration:

@@ -24,7 +24,19 @@
         entity_id: switch.aqara_gateway
     - delay: '00:01:00'
     - service: homeassistant.restart
-    
+
+- alias: Wake up based on Lukasz alarm clock
+  trigger:
+    - platform: event
+      event_type: ifttt_webhook_received
+      event_data:
+        event: "LB-android-alarm-went-off"
+  action:
+    - service: notify.android_lukasz
+      data:
+        message: "REPLACE ME WITH WAKE UP AUTOMATION"
+  
+
 - alias: Speak through Google Cast
   trigger:
     platform: time_pattern
@@ -36,16 +48,16 @@
         message: 'Dzień dobry królewno Alicjo. Pięknie dzisiaj wyglądasz'
         language: 'pl'
     
-- alias: Test receiving IFTTT event as HA event
-  trigger:
-    - platform: event
-      event_type: ifttt_webhook_received
-      event_data:
-        action: call_service
-  action:
-    service_template: '{{ trigger.event.data.service }}'
-    data_template:
-        entity_id: '{{ trigger.event.data.entity_id }}'
+# - alias: Test receiving IFTTT event as HA event
+#   trigger:
+#     - platform: event
+#       event_type: ifttt_webhook_received
+#       event_data:
+#         action: call_service
+#   action:
+#     service_template: '{{ trigger.event.data.service }}'
+#     data_template:
+#         entity_id: '{{ trigger.event.data.entity_id }}'
         
 
 - alias: "Entrance external lights on between Setting and Rising"

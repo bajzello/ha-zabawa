@@ -10,4 +10,5 @@ known_devices.yaml
 .cloud/
 tts/
 google_service_account.json
+ha-pub-sub-publisher-service-account-key.json
 
