@@ -142,7 +142,7 @@ climate:
     target_sensor: sensor.spa_temperature_with_offset
     min_temp: 20
     max_temp: 45
-    target_temp: 28
+    target_temp: 37
     cold_tolerance: 1
     hot_tolerance: 1
     min_cycle_duration:

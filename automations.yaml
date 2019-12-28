@@ -9,7 +9,7 @@
     - condition: or
       conditions:
         - condition: template
-          value_template: "{{ not(states.sensor.temperature_158d0002b87fdd | float > 0)}}"
+          value_template: "{{ not(states.sensor.temperature_158d0002b87fdd.state | float > 0)}}"
   action:
     - service: notify.android_lukasz
       data:
@@ -24,6 +24,17 @@
         entity_id: switch.aqara_gateway
     - delay: '00:01:00'
     - service: homeassistant.restart
+
+- alias: Open gate automatically when Lukasz back home
+  trigger:
+    - platform: state
+      entity_id: 'device_tracker.google_maps_107747480305280073082'
+      from:  'not_home'
+      to: 'home'
+  action:
+    - service: cover.open_cover
+      data:
+        entity_id: cover.gateway
 
 - alias: Wake up based on Lukasz alarm clock
   trigger:
