@@ -155,7 +155,6 @@ views:
           - automation.activate_and_deactivate_night_cleaning_humidifier
           - automation.activate_and_deactivate_night_cleaning_all_the_rest
           - automation.turn_on_max_cleaning_when_max_clean_flag_turned_on
-          - automation.test_receiving_ifttt_event_as_ha_event
           - automation.speak_through_google_cast
           - automation.open_gate_automatically_when_lukasz_back_home
           - automation.wake_up_on_defined_datetime
@@ -225,7 +224,6 @@ views:
           - light.hue_color_lamp_1
           - light.hue_color_lamp_2
           - light.hue_color_lamp_3
-          - light.group_for_wakeup
         title: Światło
       - type: entities
         entities:
@@ -241,10 +239,7 @@ views:
           - switch.sonoff_1000a42461
           - switch.sonoff_10002befc0
           - switch.sonoff_10005bb9e1
-          - switch.sonoff_100065381d
-        #   - switch.wall_switch_ln_right_158d0004507e83
-        #   - switch.wall_switch_ln_left_158d0004507e83
-          - switch.nawilzacz
+          - switch.aqara_gateway
         title: Przełącznik
       - type: entities
         entities:
