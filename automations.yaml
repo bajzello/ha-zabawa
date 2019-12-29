@@ -36,17 +36,16 @@
       data:
         entity_id: cover.gateway
 
-- alias: Wake up based on Lukasz alarm clock
+- alias: Wake up on defined datetime
   trigger:
-    - platform: event
-      event_type: ifttt_webhook_received
-      event_data:
-        event: "LB-android-alarm-went-off"
+    platform: template
+    # remember to update template below by subtracting length of sequence so it will end right on time
+    value_template: "{{ (states('sensor.date_time') == (state_attr('input_datetime.wake_up_time', 'timestamp') - 8*60) | int | timestamp_custom('%Y-%m-%d, %H:%M', True)) }}"
   action:
-    - service: notify.android_lukasz
+    - service: script.turn_on
       data:
-        message: "REPLACE ME WITH WAKE UP AUTOMATION"
-  
+        entity_id: script.wake_up_sequence_9min
+
 
 - alias: Speak through Google Cast
   trigger:

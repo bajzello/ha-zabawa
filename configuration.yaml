@@ -31,6 +31,12 @@ google_pubsub:
         - sensor.pm10
         - sensor.xiaomi_air_monitor_living_room
 
+hue:
+  bridges:
+    - host: 192.168.1.167
+      allow_unreachable: true
+      allow_hue_groups: true
+
 google_assistant:
   project_id: ha-assistant-4a083
 #   api_key: !secret google_assistant_api_key
@@ -254,6 +260,12 @@ input_datetime:
     name: Bathroom Lights Shelves On Time
     has_date: false
     has_time: true
+  #TODO: replace it with time based on google assistant wake up alarm
+  wake_up_time:
+    name: Wake up time
+    has_date: true
+    has_time: true
+
 
 notify:
   - name: android_lukasz
@@ -330,6 +342,7 @@ sensor:
   - platform: time_date
     display_options:
       - 'time'
+      - 'date_time'
 
     # can I get ride of that and have only binary_sensor ? Was unable to template binary sensor value properly...
   - platform: rest
