@@ -11,6 +11,14 @@ http:
   ssl_key: /ssl/privkey.pem
    
 
+zone:
+  # This will override the default home zone
+  - name: Home
+    latitude: !secret zone_home_latitude
+    longitude: !secret zone_home_longitude
+    radius: 150
+    icon: mdi:account-multiple
+
 #comment testing git-pull addon in hassio
 
 lovelace:
