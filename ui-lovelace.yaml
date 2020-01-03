@@ -241,6 +241,7 @@ views:
           - switch.sonoff_1000a42461
           - switch.sonoff_10002befc0
           - switch.sonoff_10005bb9e1
+          - switch.sonoff_1000ac41af
           - switch.aqara_gateway
         title: Przełącznik
       - type: entities
@@ -358,11 +359,11 @@ views:
                 icon: mdi:air-humidifier
                 tap_action: 
                     action: toggle
-            #   - entity: switch.nawilzacz
-            #     name: Piętro
-            #     icon: mdi:air-humidifier
-            #     tap_action: 
-            #         action: toggle
+              - entity: switch.sonoff_1000ac41af
+                name: Piętro
+                icon: mdi:air-humidifier
+                tap_action: 
+                    action: toggle
          - type: horizontal-stack
            cards:
             - type: sensor

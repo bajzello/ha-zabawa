@@ -270,27 +270,27 @@
 - alias: "Upstairs: Humidity"
   trigger:
     platform: time_pattern
-    minutes: "/15"
+    minutes: "/1"
   action:
     - condition: or
       conditions:
         - condition: and
           conditions:
             - condition: state
-              entity_id: 'switch.nawilzacz'
+              entity_id: switch.sonoff_1000ac41af
               state: 'off'
             - condition: template
               value_template: "{{ states.sensor.humidity_158d0002b6ca82.state | float < states.input_number.min_humidity.state | float }}"
         - condition: and
           conditions:
             - condition: state
-              entity_id: 'switch.nawilzacz'
+              entity_id: switch.sonoff_1000ac41af
               state: 'on'
             - condition: template
               value_template: "{{ states.sensor.humidity_158d0002b6ca82.state | float > states.input_number.max_humidity.state | float }}"
     - service: switch.toggle
       data:
-        entity_id: switch.nawilzacz
+        entity_id: switch.sonoff_1000ac41af
 
 - alias: "Calculate if nobody is at home"
   trigger:
