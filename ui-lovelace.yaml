@@ -124,6 +124,7 @@ views:
       - entity: sensor.wardrobe_room_overlay
       - entity: sensor.bedroom_overlay
       - entity: sun.sun
+      - entity: sensor.mi_flora_moisture
     cards:
       - type: media-control
         entity: media_player.living_room_display
@@ -243,6 +244,7 @@ views:
           - switch.sonoff_10005bb9e1
           - switch.sonoff_1000ac41af
           - switch.aqara_gateway
+          - switch.xiaomi_miio_switch
         title: Przełącznik
       - type: entities
         entities:

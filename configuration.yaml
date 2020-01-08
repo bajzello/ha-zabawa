@@ -160,7 +160,7 @@ climate:
     target_sensor: sensor.spa_temperature_with_offset
     min_temp: 20
     max_temp: 45
-    target_temp: 37
+    target_temp: 36
     cold_tolerance: 1
     hot_tolerance: 1
     min_cycle_duration:
@@ -283,6 +283,11 @@ notify:
   - name: android_lukasz
     platform: simplepush
     device_key: !secret simplepush_lukasz_android_device_key
+
+switch:
+  - platform: xiaomi_miio
+    host: 192.168.1.169
+    token: !secret xiaomi_miio_switch_token
 
 fan:
 # Xiaomi Air Purifier Pro - Living Room
@@ -481,3 +486,9 @@ sensor:
     name: Xiaomi Air Monitor Living Room
     host: 192.168.1.144
     token: !secret xiaomi_miio_air_monitor_Living_room_token
+    
+  - platform: miflora
+    mac: 'C4:7C:8D:67:54:FA'
+    monitored_conditions:
+      - moisture
+      - temperature
