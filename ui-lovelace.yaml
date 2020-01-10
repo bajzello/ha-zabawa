@@ -3,6 +3,16 @@ views:
   - path: default_view
     title: Home
     badges:
+      - entity: binary_sensor.spa_heating
+      - entity: sensor.spa_monthly_heating_time
+      - entity: sensor.spa_today_heating_time
+      - entity: sensor.spa_today_circulation_pump_time
+      - entity: sensor.spa_heater_power_usage_today
+      - entity: sensor.spa_circulation_pump_power_usage_today
+      - entity: sensor.spa_power_usage_today
+      - entity: sensor.spa_heater_cost_today
+      - entity: sensor.spa_circulation_pump_cost_today
+      - entity: sensor.spa_cost_today
       - entity: binary_sensor.gate
       - entity: binary_sensor.updater
       - entity: binary_sensor.water_leak_sensor_158d0002774172
@@ -218,6 +228,9 @@ views:
           - input_number.max_humidity
           - input_number.min_alert_spa_machinery_temperature
           - input_number.asleep_ilumination_threshold
+          - input_number.spa_circulation_pump_wattage
+          - input_number.spa_heater_wattage
+          - input_number.total_kwh_cost
         title: Pole numeryczne
       - type: entities
         entities:
@@ -249,6 +262,7 @@ views:
       - type: entities
         entities:
           - vacuum.henry
+          - vacuum.xiaomi_vacuum_cleaner
         title: Odkurzacz
 
   - title: cast

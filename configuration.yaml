@@ -44,6 +44,8 @@ hue:
     - host: 192.168.1.167
       allow_unreachable: true
       allow_hue_groups: true
+      
+
 
 google_assistant:
   project_id: ha-assistant-4a083
@@ -179,6 +181,11 @@ light:
 automower:
   username: !secret husqvarna_username
   password: !secret husqvarna_password
+  
+vacuum:
+   - platform: xiaomi_miio
+     host: 192.168.1.171
+     token: !secret roborock_s5max_token
 
 device_tracker:
   - platform: google_maps
@@ -196,6 +203,10 @@ binary_sensor:
         friendly_name: "Gate"
         device_class: garage_door
         value_template: "{{ is_state('sensor.gate_closed', 'False') }}"
+      spa_heating:
+        friendly_name: "Spa heating"
+        device_class: heat
+        value_template: "{{ is_state('switch.sonoff_10005bb9e1', 'on') and  is_state('switch.sonoff_100075c3f8', 'on')}}"
           
 cover:
   - platform: template
@@ -265,6 +276,28 @@ input_number:
     min: 1
     max: 100
     mode: box
+  spa_circulation_pump_wattage:
+    name: SPA Circulation Pump wattage
+    initial: 266
+    min: 1
+    max: 1000
+    mode: box
+    unit_of_measurement: W
+  spa_heater_wattage:
+    name: SPA Heater wattage
+    initial: 3000
+    min: 0
+    max: 5000
+    mode: box
+    unit_of_measurement: W
+  total_kwh_cost:
+    name: "Total cost of 1 kWh"
+    initial: 0.55
+    min: 0
+    max: 10
+    step: 0.01
+    mode: box
+    unit_of_measurement: PLN
 
     
 input_datetime:
@@ -463,6 +496,36 @@ sensor:
             friendly_name: "Humidifier Water Level"
             value_template: '{{ ((states.fan.living_room_humidifier.attributes.depth | int / 125) * 100) | round(0) }}'
             unit_of_measurement: "%"
+        
+        spa_heater_power_usage_today:
+            friendly_name: "Spa heater power usage today"
+            value_template: '{{ (states.sensor.spa_today_heating_time.state | float) * (states.input_number.spa_heater_wattage.state | float)}}'
+            unit_of_measurement: "W"
+
+        spa_circulation_pump_power_usage_today:
+            friendly_name: "Spa circution pump power usage today"
+            value_template: '{{ (states.sensor.spa_today_circulation_pump_time.state | float) * (states.input_number.spa_circulation_pump_wattage.state | float)}}'
+            unit_of_measurement: "W"
+            
+        spa_power_usage_today:
+            friendly_name: "Spa power usage today"
+            value_template: '{{ (((states.sensor.spa_today_heating_time.state | float) * (states.input_number.spa_heater_wattage.state | float)) + ((states.sensor.spa_today_circulation_pump_time.state | float) * (states.input_number.spa_circulation_pump_wattage.state | float)))}}'
+            unit_of_measurement: "W"
+
+        spa_heater_cost_today:
+            friendly_name: "Spa heater cost today"
+            value_template: '{{ ((states.sensor.spa_heater_power_usage_today.state | float / 1000) * (states.input_number.total_kwh_cost.state | float)) | round(2) }}'
+            unit_of_measurement: "PLN"
+            
+        spa_circulation_pump_cost_today:
+            friendly_name: "Spa circulation pump cost today"
+            value_template: '{{ ((states.sensor.spa_circulation_pump_power_usage_today.state | float / 1000) * (states.input_number.total_kwh_cost.state | float)) | round(2) }}'
+            unit_of_measurement: "PLN"
+            
+        spa_cost_today:
+            friendly_name: "Spa total cost today"
+            value_template: '{{ ((states.sensor.spa_power_usage_today.state | float / 1000) * (states.input_number.total_kwh_cost.state | float)) | round(2) }}'
+            unit_of_measurement: "PLN"
     
   - platform: rest
     resource: !secret looko2_api_url_with_token
@@ -492,3 +555,28 @@ sensor:
     monitored_conditions:
       - moisture
       - temperature
+
+  - platform: history_stats
+    name: Spa monthly heating time
+    entity_id: binary_sensor.spa_heating
+    state: 'on'
+    type: time
+    end: '{{ now().replace(hour=0).replace(minute=0).replace(second=0) }}'
+    duration:
+        days: 30
+        
+  - platform: history_stats
+    name: Spa today heating time
+    entity_id: binary_sensor.spa_heating
+    state: 'on'
+    type: time
+    start: '{{ now().replace(hour=0).replace(minute=0).replace(second=0) }}'
+    end: '{{ now() }}'
+    
+  - platform: history_stats
+    name: Spa today circulation pump time
+    entity_id: switch.sonoff_100075c3f8
+    state: 'on'
+    type: time
+    start: '{{ now().replace(hour=0).replace(minute=0).replace(second=0) }}'
+    end: '{{ now() }}'
