@@ -1,3 +1,95 @@
+- alias: "Roborock: save last full cleanup downstairs"
+  trigger:
+    platform: state
+    entity_id: 'vacuum.xiaomi_vacuum_cleaner'
+    to: 'docked'
+  condition:
+    - condition: state
+      entity_id: input_boolean.nobody_home
+      state: 'on'
+  action:
+    # This means that it has finished cleaning uninterrupted so save last cleaning timestamp
+    - service: input_datetime.set_datetime
+      entity_id: input_datetime.last_cleaning
+      data_template:
+        date: >
+            {{ now().timestamp() | timestamp_custom("%Y-%m-%d", true) }}
+        time: >
+            {{ now().timestamp() | timestamp_custom("%H:%M:%S", true) }}
+            
+
+- alias: "Roborock: stop cleaning when someone gets back home"
+  trigger:
+    platform: state
+    entity_id: 'input_boolean.nobody_home'
+    from:  'on'
+    to: 'off'
+  action:
+    # set speed to balanced
+    # ['Quiet', 'Balanced', 'Turbo', 'Max']
+    # 104 = Max
+    # 103 = Turbo
+    # 102 = Balanced (default)
+    # 101 = Silent
+    # ---
+    # 105 = Gentle
+    - service: vacuum.set_fan_speed
+      data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+        fan_speed: 102 #Balanced (default)
+    
+    - service: vacuum.return_to_base
+      entity_id: vacuum.xiaomi_vacuum_cleaner
+    # running it two times looks like it's needed as first one just stops the vacuum (states: cleaning -(return_to_base)-> paused -(return_to_base)-> returning --> docked  )
+    - delay: '00:00:01'
+    - service: vacuum.return_to_base
+      entity_id: vacuum.xiaomi_vacuum_cleaner
+    
+- alias: "Roborock: start cleaning when nobody home and it's needed"
+  trigger:
+    platform: state
+    entity_id: 'input_boolean.nobody_home'
+    from:  'off'
+    to: 'on'
+  action:
+    - condition: template
+      value_template: "{{ (states('sensor.date_time') > (state_attr('input_datetime.last_cleaning', 'timestamp') + states('input_number.min_amount_of_hours_between_vacuuming')|int*60*60) | int | timestamp_custom('%Y-%m-%d, %H:%M', True)) }}"
+    - service: vacuum.start
+      entity_id: vacuum.xiaomi_vacuum_cleaner
+    - delay: '00:00:01'
+    - service: vacuum.set_fan_speed
+      data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+        fan_speed: 104 #Max
+        
+- alias: "Roborock: controller using magic cube"
+  trigger:
+    - platform: event
+      event_type: xiaomi_aqara.cube_action
+      event_data:
+        entity_id: binary_sensor.cube_158d000289d732
+        action_type: tap_twice
+  action:
+    - service: vacuum.set_fan_speed
+      data:
+        entity_id: vacuum.xiaomi_vacuum_cleaner
+        fan_speed: 102 #Balanced (default)
+        
+    - service_template: >
+        {% if is_state('vacuum.xiaomi_vacuum_cleaner', 'docked') %}
+            vacuum.start
+        {% elif is_state('vacuum.xiaomi_vacuum_cleaner', 'stopped') or is_state('vacuum.xiaomi_vacuum_cleaner', 'idle') %}
+            vacuum.return_to_base
+        {% else %}
+            vacuum.stop
+        {% endif %}
+      entity_id: vacuum.xiaomi_vacuum_cleaner
+    - delay: '00:00:05'
+    - condition: template
+      value_template: "{{ is_state('vacuum.xiaomi_vacuum_cleaner', 'stopped') or is_state('vacuum.xiaomi_vacuum_cleaner', 'idle') }}"
+    - service: vacuum.return_to_base
+      entity_id: vacuum.xiaomi_vacuum_cleaner
+
 
 # FINISH ONCE THERE IS A SONOFF PLUG ABLE TO RESTART AQUARA GATEWAY AS THE MAIN SOURCE OF GETTING OUT OF SYNC and then restarting it and then HA should solve it
 # humidifier xiaomi can also cause issues - check that as well but this one seems to heal itself
@@ -47,16 +139,16 @@
         entity_id: script.wake_up_sequence_9min
 
 
-- alias: Speak through Google Cast
-  trigger:
-    platform: time_pattern
-    hours: "/99999"
-  action:
-    service: tts.google_translate_say
-    entity_id: media_player.living_room_display
-    data:
-        message: 'Dzień dobry królewno Alicjo. Pięknie dzisiaj wyglądasz'
-        language: 'pl'
+# - alias: Speak through Google Cast
+#   trigger:
+#     platform: time_pattern
+#     hours: "/99999"
+#   action:
+#     service: tts.google_translate_say
+#     entity_id: media_player.living_room_display
+#     data:
+#         message: 'Dzień dobry królewno Alicjo. Pięknie dzisiaj wyglądasz'
+#         language: 'pl'
     
 # - alias: Test receiving IFTTT event as HA event
 #   trigger:

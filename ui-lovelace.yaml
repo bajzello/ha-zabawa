@@ -142,6 +142,7 @@ views:
         entity: media_player.office_speaker
       - type: entities
         entities:
+          - automation.roborock
           - automation.notify_when_spa_machinery_temp_below_alert_value
           - automation.notify_when_xiaomi_humidifier_water_level_below_alert_value
           - automation.system_travis_build_failed
@@ -219,6 +220,7 @@ views:
         entities:
           - input_datetime.bathroom_lights_on_time
           - input_datetime.wake_up_time
+          - input_datetime.last_cleaning
         title: Pole daty czasu
       - type: entities
         entities:
@@ -231,6 +233,7 @@ views:
           - input_number.spa_circulation_pump_wattage
           - input_number.spa_heater_wattage
           - input_number.total_kwh_cost
+          - input_number.min_amount_of_hours_between_vacuuming
         title: Pole numeryczne
       - type: entities
         entities:

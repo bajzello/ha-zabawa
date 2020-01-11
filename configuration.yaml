@@ -44,8 +44,6 @@ hue:
     - host: 192.168.1.167
       allow_unreachable: true
       allow_hue_groups: true
-      
-
 
 google_assistant:
   project_id: ha-assistant-4a083
@@ -183,9 +181,9 @@ automower:
   password: !secret husqvarna_password
   
 vacuum:
-   - platform: xiaomi_miio
-     host: 192.168.1.171
-     token: !secret roborock_s5max_token
+  - platform: xiaomi_miio
+    host: 192.168.1.171
+    token: 44797735386172693134635074314b53
 
 device_tracker:
   - platform: google_maps
@@ -298,6 +296,13 @@ input_number:
     step: 0.01
     mode: box
     unit_of_measurement: PLN
+  min_amount_of_hours_between_vacuuming:
+    name: "Min hours between vacuuming"
+    initial: 12
+    min: 0
+    max: 100
+    mode: box
+    unit_of_measurement: hours
 
     
 input_datetime:
@@ -308,6 +313,10 @@ input_datetime:
   #TODO: replace it with time based on google assistant wake up alarm
   wake_up_time:
     name: Wake up time
+    has_date: true
+    has_time: true
+  last_cleaning:
+    name: Last cleaning
     has_date: true
     has_time: true
 
@@ -526,6 +535,11 @@ sensor:
             friendly_name: "Spa total cost today"
             value_template: '{{ ((states.sensor.spa_power_usage_today.state | float / 1000) * (states.input_number.total_kwh_cost.state | float)) | round(2) }}'
             unit_of_measurement: "PLN"
+            
+        last_finished_cleaning_timestamp:
+            friendly_name: "Last cleaning"
+            value_template: '{{ now().replace(year=now().year - 1) }}'
+            device_class: timestamp
     
   - platform: rest
     resource: !secret looko2_api_url_with_token
@@ -580,3 +594,7 @@ sensor:
     type: time
     start: '{{ now().replace(hour=0).replace(minute=0).replace(second=0) }}'
     end: '{{ now() }}'
+    
+  - platform: time_date
+    display_options:
+      - 'date_time'
