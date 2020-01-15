@@ -133,7 +133,7 @@ camera:
   - platform: generic
     name: G3 Flex
     still_image_url: http://192.168.1.186/snap.jpeg
-    stream_source: rtsp://192.168.1.2:7447/FNaH3tzssZhaD7Fk
+    stream_source: !secret camera_g3_flex_rtsp
 
 
 
@@ -318,6 +318,14 @@ input_datetime:
   last_cleaning:
     name: Last cleaning
     has_date: true
+    has_time: true
+  open_gate_for_food_delivery_start:
+    name: Open gate from
+    has_date: false
+    has_time: true
+  open_gate_for_food_delivery_end:
+    name: Open gate to
+    has_date: false
     has_time: true
 
 

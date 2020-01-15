@@ -45,7 +45,7 @@
     - service: vacuum.return_to_base
       entity_id: vacuum.xiaomi_vacuum_cleaner
     
-- alias: "Roborock: start cleaning when nobody home and it's needed"
+- alias: "Roborock: start cleaning when nobody home and it is needed"
   trigger:
     platform: state
     entity_id: 'input_boolean.nobody_home'
@@ -62,7 +62,7 @@
         entity_id: vacuum.xiaomi_vacuum_cleaner
         fan_speed: 104 #Max
         
-- alias: "Roborock: controller using magic cube"
+- alias: "Roborock: control using magic cube"
   trigger:
     - platform: event
       event_type: xiaomi_aqara.cube_action
@@ -233,6 +233,20 @@
     service: switch.turn_on
     data:
         entity_id: switch.sonoff_1000a4af39
+        
+- alias: "Open and close gate for food delivery"
+  trigger:
+    platform: template
+    value_template: "{{ is_state('input_boolean.nobody_home', 'off') and ((states('sensor.gate_closed') and  now().weekday() >= 1 and now().weekday() <= 5 and states('sensor.time') == (state_attr('input_datetime.open_gate_for_food_delivery_start', 'timestamp') | int | timestamp_custom('%H:%M', False))) or (is_state('sensor.gate_closed', 'False') and  now().weekday() >= 1 and now().weekday() <= 5 and states('sensor.time') == (state_attr('input_datetime.open_gate_for_food_delivery_end', 'timestamp') | int | timestamp_custom('%H:%M', False)))) }}"
+  action:
+    - service_template: >
+        {% if states.sensor.gate_closed.state  %}
+            cover.open_cover
+        {% else %}
+            cover.close_cover
+        {% endif %}
+      data:
+        entity_id: cover.gateway
     
 
 - alias: "Living Room: Air quality"
@@ -383,6 +397,8 @@
     - service: switch.toggle
       data:
         entity_id: switch.sonoff_1000ac41af
+
+# wlaczalo sie 14.01 kiedy byla sama niania w domu
 
 - alias: "Calculate if nobody is at home"
   trigger:

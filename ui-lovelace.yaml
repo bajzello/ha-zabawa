@@ -142,7 +142,10 @@ views:
         entity: media_player.office_speaker
       - type: entities
         entities:
-          - automation.roborock
+          - automation.roborock_control_using_magic_cube
+          - automation.roborock_save_last_full_cleanup_downstairs
+          - automation.roborock_start_cleaning_when_nobody_home_and_it_is_needed
+          - automation.roborock_stop_cleaning_when_someone_gets_back_home
           - automation.notify_when_spa_machinery_temp_below_alert_value
           - automation.notify_when_xiaomi_humidifier_water_level_below_alert_value
           - automation.system_travis_build_failed
@@ -170,6 +173,7 @@ views:
           - automation.speak_through_google_cast
           - automation.open_gate_automatically_when_lukasz_back_home
           - automation.wake_up_on_defined_datetime
+          - automation.open_and_close_gate_for_food_delivery
         title: Automatyzacja
       - type: picture-entity
         entity: camera.generic_camera
@@ -221,6 +225,8 @@ views:
           - input_datetime.bathroom_lights_on_time
           - input_datetime.wake_up_time
           - input_datetime.last_cleaning
+          - input_datetime.open_gate_for_food_delivery_start
+          - input_datetime.open_gate_for_food_delivery_end
         title: Pole daty czasu
       - type: entities
         entities:
