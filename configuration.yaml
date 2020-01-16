@@ -244,6 +244,12 @@ input_number:
     min: 1
     max: 60
     mode: box
+  min_aqi_for_xiaomi_auto_speed:
+    name: Max AQI for Xiaomi rooms in Auto mode
+    initial: 25
+    min: 1
+    max: 60
+    mode: box
   min_humidity:
     name: Min humidity
     initial: 51

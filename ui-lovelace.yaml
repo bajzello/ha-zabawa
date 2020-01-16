@@ -174,6 +174,10 @@ views:
           - automation.open_gate_automatically_when_lukasz_back_home
           - automation.wake_up_on_defined_datetime
           - automation.open_and_close_gate_for_food_delivery
+          - automation.living_room_adjust_air_purifier_speed_based_on_air_quality
+          - automation.bedroom_adjust_air_purifier_speed_based_on_air_quality
+          - automation.kids_room_adjust_air_purifier_speed_based_on_air_quality
+          - automation.playroom_adjust_air_purifier_speed_based_on_air_quality
         title: Automatyzacja
       - type: picture-entity
         entity: camera.generic_camera
@@ -232,6 +236,7 @@ views:
         entities:
           - input_number.alert_humidifier_water_level
           - input_number.max_aqi_for_xiaomi
+          - input_number.min_aqi_for_xiaomi_auto_speed
           - input_number.min_humidity
           - input_number.max_humidity
           - input_number.min_alert_spa_machinery_temperature

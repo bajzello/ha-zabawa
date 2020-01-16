@@ -1,3 +1,5 @@
+########## Roborock ##########
+
 - alias: "Roborock: save last full cleanup downstairs"
   trigger:
     platform: state
@@ -91,6 +93,8 @@
       entity_id: vacuum.xiaomi_vacuum_cleaner
 
 
+########## Aqara Gateway ##########
+
 # FINISH ONCE THERE IS A SONOFF PLUG ABLE TO RESTART AQUARA GATEWAY AS THE MAIN SOURCE OF GETTING OUT OF SYNC and then restarting it and then HA should solve it
 # humidifier xiaomi can also cause issues - check that as well but this one seems to heal itself
 - alias: "Restart Aqara and HA when integration interrupted"
@@ -117,6 +121,8 @@
     - delay: '00:01:00'
     - service: homeassistant.restart
 
+########## Gateway ##########
+
 - alias: Open gate automatically when Lukasz back home
   trigger:
     - platform: state
@@ -127,6 +133,22 @@
     - service: cover.open_cover
       data:
         entity_id: cover.gateway
+
+- alias: "Open and close gate for food delivery"
+  trigger:
+    platform: template
+    value_template: "{{ is_state('input_boolean.nobody_home', 'off') and ((states('sensor.gate_closed') and  now().weekday() >= 1 and now().weekday() <= 5 and states('sensor.time') == (state_attr('input_datetime.open_gate_for_food_delivery_start', 'timestamp') | int | timestamp_custom('%H:%M', False))) or (is_state('sensor.gate_closed', 'False') and  now().weekday() >= 1 and now().weekday() <= 5 and states('sensor.time') == (state_attr('input_datetime.open_gate_for_food_delivery_end', 'timestamp') | int | timestamp_custom('%H:%M', False)))) }}"
+  action:
+    - service_template: >
+        {% if states.sensor.gate_closed.state  %}
+            cover.open_cover
+        {% else %}
+            cover.close_cover
+        {% endif %}
+      data:
+        entity_id: cover.gateway
+
+########## Wake up ##########
 
 - alias: Wake up on defined datetime
   trigger:
@@ -160,7 +182,8 @@
 #     service_template: '{{ trigger.event.data.service }}'
 #     data_template:
 #         entity_id: '{{ trigger.event.data.entity_id }}'
-        
+
+########## Lights ##########        
 
 - alias: "Entrance external lights on between Setting and Rising"
   trigger:
@@ -187,6 +210,17 @@
             switch.turn_off
         {% endif %}
     entity_id: switch.sonoff_1000a42461
+    
+- alias: "Turn on Bathroom Shelves Lights on desired time"
+  trigger:
+    platform: template
+    value_template: "{{ states('sensor.time') == (state_attr('input_datetime.bathroom_lights_on_time', 'timestamp') | int | timestamp_custom('%H:%M', False)) }}"
+  action:
+    service: switch.turn_on
+    data:
+        entity_id: switch.sonoff_1000a4af39
+
+########## Spa ##########
 
 #do it on boot so sensor will be picked up by generic thermostat as it initializes later than him
 - alias: "On boot refresh desired Spa temperature"
@@ -199,6 +233,20 @@
         entity_id: climate.spa
         temperature: '{{ states.climate.spa.attributes.temperature }}'
         
+- alias: "Notify when SPA Machinery temp below alert value"
+  trigger:
+    platform: template
+    value_template: "{{ states.sensor.temperature_158d0002b87fdd.state | float < states.input_number.min_alert_spa_machinery_temperature.state | float }}"
+  action:
+    - condition: template
+      value_template: "{{ states.sensor.temperature_158d0002b87fdd.state | float < states.input_number.min_alert_spa_machinery_temperature.state | float }}"
+    - service: notify.android_lukasz
+      data:
+        message: "HA-Zabawa - SPA Machinery Temperature"
+        title: "Temperature: {{ states.sensor.temperature_158d0002b87fdd.state }} is below threshold ({{ states.input_number.min_alert_spa_machinery_temperature.state }})" 
+
+########## Nobody home /  everyone asleep ##########
+
 - alias: "Control nobody home using Aqara Magic Cube"
   trigger:
     - platform: event
@@ -225,29 +273,64 @@
         {% endif %}
       entity_id: input_boolean.nobody_home
 
-- alias: "Turn on Bathroom Shelves Lights on desired time"
+# wlaczalo sie 14.01 kiedy byla sama niania w domu
+
+- alias: "Calculate if nobody is at home"
   trigger:
-    platform: template
-    value_template: "{{ states('sensor.time') == (state_attr('input_datetime.bathroom_lights_on_time', 'timestamp') | int | timestamp_custom('%H:%M', False)) }}"
+    platform: state
+    entity_id: device_tracker.google_maps_107747480305280073082, device_tracker.google_maps_102671172042975404481, device_tracker.google_maps_113206223653696792209
+  condition:
+    condition: or
+    conditions:
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: input_boolean.nobody_home
+              state: 'on'
+            - condition: or
+              conditions:
+                - condition: state
+                  entity_id: 'device_tracker.google_maps_107747480305280073082'
+                  state: 'home'
+                - condition: state
+                  entity_id: 'device_tracker.google_maps_102671172042975404481'
+                  state: 'home'
+                - condition: state
+                  entity_id: 'device_tracker.google_maps_113206223653696792209'
+                  state: 'home'
+        - condition: and
+          conditions:
+            - condition: state
+              entity_id: input_boolean.nobody_home
+              state: 'off'
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: 'device_tracker.google_maps_107747480305280073082'
+                  state: 'not_home'
+                - condition: state
+                  entity_id: 'device_tracker.google_maps_102671172042975404481'
+                  state: 'not_home'
+                - condition: state
+                  entity_id: 'device_tracker.google_maps_113206223653696792209'
+                  state: 'not_home'
   action:
-    service: switch.turn_on
+    service: input_boolean.toggle
     data:
-        entity_id: switch.sonoff_1000a4af39
+        entity_id: input_boolean.nobody_home
         
-- alias: "Open and close gate for food delivery"
+- alias: "Calculate if everybody asleep"
   trigger:
-    platform: template
-    value_template: "{{ is_state('input_boolean.nobody_home', 'off') and ((states('sensor.gate_closed') and  now().weekday() >= 1 and now().weekday() <= 5 and states('sensor.time') == (state_attr('input_datetime.open_gate_for_food_delivery_start', 'timestamp') | int | timestamp_custom('%H:%M', False))) or (is_state('sensor.gate_closed', 'False') and  now().weekday() >= 1 and now().weekday() <= 5 and states('sensor.time') == (state_attr('input_datetime.open_gate_for_food_delivery_end', 'timestamp') | int | timestamp_custom('%H:%M', False)))) }}"
+    platform: time_pattern
+    minutes: "/5"
   action:
-    - service_template: >
-        {% if states.sensor.gate_closed.state  %}
-            cover.open_cover
-        {% else %}
-            cover.close_cover
-        {% endif %}
+    - condition: template
+      value_template: "{{ (states.sensor.illumination_7c49ebb189e3.state | float < states.input_number.asleep_ilumination_threshold.state | float and states.input_boolean.everyone_asleep.state == 'off') or (states.sensor.illumination_7c49ebb189e3.state | float > states.input_number.asleep_ilumination_threshold.state | float and states.input_boolean.everyone_asleep.state == 'on') }}"
+    - service: input_boolean.toggle
       data:
-        entity_id: cover.gateway
-    
+        entity_id: input_boolean.everyone_asleep
+
+########## Air purifiers and humidifiers ##########
 
 - alias: "Living Room: Air quality"
   trigger:
@@ -397,63 +480,6 @@
     - service: switch.toggle
       data:
         entity_id: switch.sonoff_1000ac41af
-
-# wlaczalo sie 14.01 kiedy byla sama niania w domu
-
-- alias: "Calculate if nobody is at home"
-  trigger:
-    platform: state
-    entity_id: device_tracker.google_maps_107747480305280073082, device_tracker.google_maps_102671172042975404481, device_tracker.google_maps_113206223653696792209
-  condition:
-    condition: or
-    conditions:
-        - condition: and
-          conditions:
-            - condition: state
-              entity_id: input_boolean.nobody_home
-              state: 'on'
-            - condition: or
-              conditions:
-                - condition: state
-                  entity_id: 'device_tracker.google_maps_107747480305280073082'
-                  state: 'home'
-                - condition: state
-                  entity_id: 'device_tracker.google_maps_102671172042975404481'
-                  state: 'home'
-                - condition: state
-                  entity_id: 'device_tracker.google_maps_113206223653696792209'
-                  state: 'home'
-        - condition: and
-          conditions:
-            - condition: state
-              entity_id: input_boolean.nobody_home
-              state: 'off'
-            - condition: and
-              conditions:
-                - condition: state
-                  entity_id: 'device_tracker.google_maps_107747480305280073082'
-                  state: 'not_home'
-                - condition: state
-                  entity_id: 'device_tracker.google_maps_102671172042975404481'
-                  state: 'not_home'
-                - condition: state
-                  entity_id: 'device_tracker.google_maps_113206223653696792209'
-                  state: 'not_home'
-  action:
-    service: input_boolean.toggle
-    data:
-        entity_id: input_boolean.nobody_home
-        
-- alias: "Calculate if everybody asleep"
-  trigger:
-    platform: time_pattern
-    minutes: "/5"
-  action:
-    - condition: template
-      value_template: "{{ (states.sensor.illumination_7c49ebb189e3.state | float < states.input_number.asleep_ilumination_threshold.state | float and states.input_boolean.everyone_asleep.state == 'off') or (states.sensor.illumination_7c49ebb189e3.state | float > states.input_number.asleep_ilumination_threshold.state | float and states.input_boolean.everyone_asleep.state == 'on') }}"
-    - service: input_boolean.toggle
-      data:
-        entity_id: input_boolean.everyone_asleep
     
 - alias: "Max clean based on nobody home"
   trigger:
@@ -546,6 +572,63 @@
       data:
         entity_id: fan.livingroom_xiaomi
         speed: auto
+
+- alias: "Living Room: Adjust air purifier speed based on air quality"
+  trigger:
+    - platform: state
+      entity_id: sensor.xiaomi_pro_aqi
+  condition:
+    - condition: state
+      entity_id: input_boolean.nobody_home
+      state: 'off'
+  action:
+    - service: fan.set_speed
+      data_template:
+        entity_id: fan.livingroom_xiaomi
+        speed: "{{ 'auto' if (states.sensor.xiaomi_pro_aqi.state | int > states.input_number.min_aqi_for_xiaomi_auto_speed.state | int) else 'silent' }}"
+        
+- alias: "Bedroom: Adjust air purifier speed based on air quality"
+  trigger:
+    - platform: state
+      entity_id: sensor.xiaomi_bedroom_aqi
+  condition:
+    - condition: state
+      entity_id: input_boolean.nobody_home
+      state: 'off'
+  action:
+    - service: fan.set_speed
+      data_template:
+        entity_id: fan.bedroom_xiaomi
+        speed: "{{ 'auto' if (states.sensor.xiaomi_bedroom_aqi.state | int > states.input_number.min_aqi_for_xiaomi_auto_speed.state | int) else 'silent' }}"
+        
+- alias: "Kids room: Adjust air purifier speed based on air quality"
+  trigger:
+    - platform: state
+      entity_id: sensor.xiaomi_kidsroom_aqi
+  condition:
+    - condition: state
+      entity_id: input_boolean.nobody_home
+      state: 'off'
+  action:
+    - service: fan.set_speed
+      data_template:
+        entity_id: fan.kidsroom_xiaomi
+        speed: "{{ 'auto' if (states.sensor.xiaomi_kidsroom_aqi.state | int > states.input_number.min_aqi_for_xiaomi_auto_speed.state | int) else 'silent' }}"
+        
+- alias: "Playroom: Adjust air purifier speed based on air quality"
+  trigger:
+    - platform: state
+      entity_id: sensor.xiaomi_playroom_aqi
+  condition:
+    - condition: state
+      entity_id: input_boolean.nobody_home
+      state: 'off'
+  action:
+    - service: fan.set_speed
+      data_template:
+        entity_id: fan.playroom_xiaomi
+        speed: "{{ 'auto' if (states.sensor.xiaomi_playroom_aqi.state | int > states.input_number.min_aqi_for_xiaomi_auto_speed.state | int) else 'silent' }}"
+  
 
 # TODO: Add timer trigger and check if actions needed as xiaomi humidifier might get out of sync as it won't change speed if has no water
 # TODO: Change to similar way to the night mode
@@ -648,18 +731,6 @@
         speed: silent
 
     # invoking many automations here was unrealiable as a solution to set xiaomi device to appropriate state as changing speed always turns it on
-
-- alias: "Notify when SPA Machinery temp below alert value"
-  trigger:
-    platform: template
-    value_template: "{{ states.sensor.temperature_158d0002b87fdd.state | float < states.input_number.min_alert_spa_machinery_temperature.state | float }}"
-  action:
-    - condition: template
-      value_template: "{{ states.sensor.temperature_158d0002b87fdd.state | float < states.input_number.min_alert_spa_machinery_temperature.state | float }}"
-    - service: notify.android_lukasz
-      data:
-        message: "HA-Zabawa - SPA Machinery Temperature"
-        title: "Temperature: {{ states.sensor.temperature_158d0002b87fdd.state }} is below threshold ({{ states.input_number.min_alert_spa_machinery_temperature.state }})" 
 
 - alias: "Notify when Xiaomi Humidifier water level below alert value"
   trigger:
