@@ -237,6 +237,7 @@ views:
           - input_number.alert_humidifier_water_level
           - input_number.max_aqi_for_xiaomi
           - input_number.min_aqi_for_xiaomi_auto_speed
+          - input_number.min_aqi_for_xiaomi_instant_speed_change
           - input_number.min_humidity
           - input_number.max_humidity
           - input_number.min_alert_spa_machinery_temperature

@@ -250,6 +250,12 @@ input_number:
     min: 1
     max: 60
     mode: box
+  min_aqi_for_xiaomi_instant_speed_change:
+    name: AQI to invoke instant speed change
+    initial: 50
+    min: 1
+    max: 60
+    mode: box
   min_humidity:
     name: Min humidity
     initial: 51

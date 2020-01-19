@@ -575,8 +575,12 @@
 
 - alias: "Living Room: Adjust air purifier speed based on air quality"
   trigger:
-    - platform: state
-      entity_id: sensor.xiaomi_air_monitor_living_room
+  # every 15mins
+    - platform: time_pattern
+      minutes: "/15"
+  # or instantly if certain value reached
+    - platform: template
+      value_template: "{{ states.sensor.xiaomi_air_monitor_living_room.state | float >= states.input_number.min_aqi_for_xiaomi_instant_speed_change.state | float }}"
   condition:
     - condition: state
       entity_id: input_boolean.nobody_home
@@ -589,8 +593,12 @@
         
 - alias: "Bedroom: Adjust air purifier speed based on air quality"
   trigger:
-    - platform: state
-      entity_id: sensor.xiaomi_bedroom_aqi
+  # every 15mins
+    - platform: time_pattern
+      minutes: "/15"
+  # or instantly if certain value reached
+    - platform: template
+      value_template: "{{ states.sensor.xiaomi_bedroom_aqi.state | float >= states.input_number.min_aqi_for_xiaomi_instant_speed_change.state | float }}"
   condition:
     - condition: state
       entity_id: input_boolean.nobody_home
@@ -603,8 +611,12 @@
         
 - alias: "Kids room: Adjust air purifier speed based on air quality"
   trigger:
-    - platform: state
-      entity_id: sensor.xiaomi_kidsroom_aqi
+  # every 15mins
+    - platform: time_pattern
+      minutes: "/15"
+  # or instantly if certain value reached
+    - platform: template
+      value_template: "{{ states.sensor.xiaomi_kidsroom_aqi.state | float >= states.input_number.min_aqi_for_xiaomi_instant_speed_change.state | float }}"
   condition:
     - condition: state
       entity_id: input_boolean.nobody_home
@@ -617,8 +629,12 @@
         
 - alias: "Playroom: Adjust air purifier speed based on air quality"
   trigger:
-    - platform: state
-      entity_id: sensor.xiaomi_playroom_aqi
+  # every 15mins
+    - platform: time_pattern
+      minutes: "/15"
+  # or instantly if certain value reached
+    - platform: template
+      value_template: "{{ states.sensor.xiaomi_playroom_aqi.state | float >= states.input_number.min_aqi_for_xiaomi_instant_speed_change.state | float }}"
   condition:
     - condition: state
       entity_id: input_boolean.nobody_home
