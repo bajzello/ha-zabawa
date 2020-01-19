@@ -135,6 +135,10 @@ views:
       - entity: sensor.bedroom_overlay
       - entity: sun.sun
       - entity: sensor.mi_flora_moisture
+      - entity: sensor.shelly_shem_b9ee2c_1_consumption
+      - entity: sensor.shelly_shem_b9ee2c_2_consumption
+      - entity: sensor.shelly_shsw_25_98f4abf2f056_1_consumption
+      - entity: sensor.shelly_shsw_25_98f4abf2f056_2_consumption
     cards:
       - type: media-control
         entity: media_player.living_room_display
@@ -273,6 +277,9 @@ views:
           - switch.sonoff_1000ac41af
           - switch.aqara_gateway
           - switch.xiaomi_miio_switch
+          - switch.shelly_shem_b9ee2c_1
+          - switch.shelly_shsw_25_98f4abf2f056_1
+          - switch.shelly_shsw_25_98f4abf2f056_2
         title: Przełącznik
       - type: entities
         entities:

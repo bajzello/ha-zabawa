@@ -11,4 +11,4 @@ known_devices.yaml
 tts/
 google_service_account.json
 ha-pub-sub-publisher-service-account-key.json
-
+custom_components/shelly/__pycache__/
