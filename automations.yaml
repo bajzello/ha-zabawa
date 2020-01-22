@@ -1,3 +1,20 @@
+######### Motion sensor ##########
+- alias: "Motion-Vestibule: Override nobody home"
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0004247973
+    from: "off"
+    to: "on"
+  condition:
+    - condition: state
+      entity_id: input_boolean.nobody_home
+      state: 'on'
+  action:
+    - service: notify.android_lukasz
+      data:
+        message: "HA-Zabawa - Override nobody home"
+
+
 ########## Roborock ##########
 
 - alias: "Roborock: save last full cleanup downstairs"

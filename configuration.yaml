@@ -40,17 +40,17 @@ google_pubsub:
         - sensor.xiaomi_air_monitor_living_room
 
 shelly:
-  discovery: true  #add all devices (default)
+#   discovery: true  #add all devices (default)
   upgrade_switch: true
   show_id_in_name: false
 #   sensors: #sensors to show, can be override on each device
 #     - rssi
 #     - uptime
   devices:  #configure devices
-    - id: "f2f056-1"
+    - id: "98f4abf2f056-1"
       light_switch: true
       name: "Tarrace Garden"
-    - id: "f2f056-2"
+    - id: "98f4abf2f056-2"
       light_switch: true
       name: "Tarrace Entrance"
 

@@ -21,6 +21,8 @@ views:
       - entity: binary_sensor.cube_158d000289d732
       - entity: binary_sensor.door_window_sensor_158d0002e411aa
       - entity: binary_sensor.remote_ui
+      - entity: binary_sensor.motion_sensor_158d0004247973
+      - entity: sensor.illumination_158d0004247973
       - entity: person.lukasz
       - entity: device_tracker.google_maps_102671172042975404481
       - entity: device_tracker.google_maps_107747480305280073082
@@ -448,12 +450,12 @@ views:
               icon: mdi:lightbulb
               tap_action:
                 action: toggle
-            - entity: light.shelly_shsw_25_f2f056_1
+            - entity: light.shelly_shsw_25_98f4abf2f056_2
               name: Taras wyjście
               icon: mdi:lightbulb
               tap_action:
                 action: toggle
-            - entity: light.shelly_shsw_25_f2f056_2
+            - entity: light.shelly_shsw_25_98f4abf2f056_1
               name: Taras ogród
               icon: mdi:lightbulb
               tap_action:
