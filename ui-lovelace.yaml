@@ -182,6 +182,9 @@ views:
           - automation.bedroom_adjust_air_purifier_speed_based_on_air_quality
           - automation.kids_room_adjust_air_purifier_speed_based_on_air_quality
           - automation.playroom_adjust_air_purifier_speed_based_on_air_quality
+          - automation.turn_on_bathroom_shelves_lights_when_there_is_movement
+          - automation.turn_on_bathroom_shelves_lights_when_there_is_movement
+          - automation.turn_off_bathroom_shelves_lights_1_minute_after_last_movement
         title: Automatyzacja
       - type: picture-entity
         entity: camera.generic_camera
@@ -259,8 +262,8 @@ views:
           - light.hue_color_lamp_1
           - light.hue_color_lamp_2
           - light.hue_color_lamp_3
-          - light.shelly_shsw_25_f2f056_1
-          - light.shelly_shsw_25_f2f056_2
+          - light.shelly_shsw_25_98f4abf2f056_1
+          - light.shelly_shsw_25_98f4abf2f056_2
         title: Światło
       - type: entities
         entities:
@@ -279,7 +282,6 @@ views:
           - switch.sonoff_1000ac41af
           - switch.aqara_gateway
           - switch.xiaomi_miio_switch
-          - switch.shelly_shem_b9ee2c_1
         title: Przełącznik
       - type: entities
         entities:

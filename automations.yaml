@@ -13,6 +13,28 @@
     - service: notify.android_lukasz
       data:
         message: "HA-Zabawa - Override nobody home"
+        
+- alias: Turn on bathroom shelves lights when there is movement
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0004247973
+    to: 'on'
+  action:
+    service: switch.turn_on
+    data:
+        entity_id: switch.sonoff_1000a4af39
+
+- alias: Turn off bathroom shelves lights 1 minute after last movement
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0004247973
+    to: 'off'
+    for:
+      minutes: 1
+  action:
+    service: switch.turn_off
+    data:
+        entity_id: switch.sonoff_1000a4af39
 
 
 ########## Roborock ##########
