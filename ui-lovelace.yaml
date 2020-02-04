@@ -139,6 +139,9 @@ views:
       - entity: sensor.mi_flora_moisture
       - entity: sensor.shelly_shsw_25_f2f056_1_consumption
       - entity: sensor.shelly_shsw_25_f2f056_2_consumption
+      - entity: sensor.shelly_shsw_25_f405f4_1_consumption
+      - entity: sensor.shelly_shsw_25_f405f4_2_consumption
+      - entity: sensor.shelly_shsw_pm_765f32_consumption
     cards:
       - type: media-control
         entity: media_player.living_room_display
@@ -182,9 +185,10 @@ views:
           - automation.bedroom_adjust_air_purifier_speed_based_on_air_quality
           - automation.kids_room_adjust_air_purifier_speed_based_on_air_quality
           - automation.playroom_adjust_air_purifier_speed_based_on_air_quality
-          - automation.turn_on_bathroom_shelves_lights_when_there_is_movement
-          - automation.turn_on_bathroom_shelves_lights_when_there_is_movement
-          - automation.turn_off_bathroom_shelves_lights_1_minute_after_last_movement
+          - automation.motion_vestibule_turn_on_light_and_override_nobody_home
+          - automation.motion_vestibule_turn_off_light_3_minute_after_last_movement
+          - automation.open_gate_based_on_switch_in_vestibule
+          - automation.close_gate_based_on_switch_in_vestibule
         title: Automatyzacja
       - type: picture-entity
         entity: camera.generic_camera
@@ -264,6 +268,7 @@ views:
           - light.hue_color_lamp_3
           - light.shelly_shsw_25_98f4abf2f056_1
           - light.shelly_shsw_25_98f4abf2f056_2
+          - light.shelly_shsw_pm_765f32
         title: Światło
       - type: entities
         entities:
@@ -282,6 +287,8 @@ views:
           - switch.sonoff_1000ac41af
           - switch.aqara_gateway
           - switch.xiaomi_miio_switch
+          - switch.shelly_shsw_25_f405f4_1
+          - switch.shelly_shsw_25_f405f4_2
         title: Przełącznik
       - type: entities
         entities:

@@ -41,6 +41,7 @@ google_pubsub:
 
 shelly:
 #   discovery: true  #add all devices (default)
+  discovery: true
   upgrade_switch: true
   show_id_in_name: false
 #   sensors: #sensors to show, can be override on each device
@@ -53,6 +54,13 @@ shelly:
     - id: "98f4abf2f056-2"
       light_switch: true
       name: "Tarrace Entrance"
+    - id: "f405f4-1"
+      name: "Gateway open"
+    - id: "f405f4-2"
+      name: "Gateway close"
+    - id: "765f32"
+      light_switch: true
+      name: "Vestibule"
 
 hue:
   bridges:

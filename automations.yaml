@@ -1,40 +1,31 @@
 ######### Motion sensor ##########
-- alias: "Motion-Vestibule: Override nobody home"
+- alias: "Motion-Vestibule: Turn on light and override nobody home"
   trigger:
     platform: state
     entity_id: binary_sensor.motion_sensor_158d0004247973
     from: "off"
     to: "on"
-  condition:
+  action:
+    - service: light.turn_on
+      data:
+        entity_id: light.shelly_shsw_pm_765f32
     - condition: state
       entity_id: input_boolean.nobody_home
       state: 'on'
-  action:
-    - service: notify.android_lukasz
-      data:
-        message: "HA-Zabawa - Override nobody home"
-        
-- alias: Turn on bathroom shelves lights when there is movement
-  trigger:
-    platform: state
-    entity_id: binary_sensor.motion_sensor_158d0004247973
-    to: 'on'
-  action:
-    service: switch.turn_on
-    data:
-        entity_id: switch.sonoff_1000a4af39
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.nobody_home
 
-- alias: Turn off bathroom shelves lights 1 minute after last movement
+- alias: "Motion-Vestibule: Turn off light 3 minute after last movement"
   trigger:
     platform: state
     entity_id: binary_sensor.motion_sensor_158d0004247973
     to: 'off'
     for:
-      minutes: 1
+      minutes: 3
   action:
-    service: switch.turn_off
+    service: light.turn_off
     data:
-        entity_id: switch.sonoff_1000a4af39
+        entity_id: light.shelly_shsw_pm_765f32
 
 
 ########## Roborock ##########
@@ -184,6 +175,24 @@
         {% else %}
             cover.close_cover
         {% endif %}
+      data:
+        entity_id: cover.gateway
+        
+- alias: "Open gate based on switch in vestibule"
+  trigger:
+    - platform: state
+      entity_id: switch.shelly_shsw_25_f405f4_1
+  action:
+    - service: cover.open_cover
+      data:
+        entity_id: cover.gateway
+        
+- alias: "Close gate based on switch in vestibule"
+  trigger:
+    - platform: state
+      entity_id: switch.shelly_shsw_25_f405f4_2
+  action:
+    - service: cover.close_cover
       data:
         entity_id: cover.gateway
 
@@ -620,15 +629,15 @@
   # or instantly if certain value reached
     - platform: template
       value_template: "{{ states.sensor.xiaomi_air_monitor_living_room.state | float >= states.input_number.min_aqi_for_xiaomi_instant_speed_change.state | float }}"
-  condition:
-    - condition: state
-      entity_id: input_boolean.nobody_home
-      state: 'off'
   action:
+    ## change speed from silent to auto and back only if someone home and needed (to avoid setting it when needed as it will turn on purifier)
+    - condition: template
+      value_template: "{{ states.input_boolean.nobody_home.state == 'off' and ((states.sensor.xiaomi_air_monitor_living_room.state | float >= states.input_number.min_aqi_for_xiaomi_auto_speed.state | float and states.sensor.xiaomi_pro_mode.state == 'silent') or (states.sensor.xiaomi_air_monitor_living_room.state | float < states.input_number.min_aqi_for_xiaomi_auto_speed.state | float and states.sensor.xiaomi_pro_mode.state != 'silent')) }}"
+      
     - service: fan.set_speed
       data_template:
         entity_id: fan.livingroom_xiaomi
-        speed: "{{ 'auto' if (states.sensor.xiaomi_air_monitor_living_room.state | int > states.input_number.min_aqi_for_xiaomi_auto_speed.state | int) else 'silent' }}"
+        speed: "{{ 'auto' if (states.sensor.xiaomi_air_monitor_living_room.state | int >= states.input_number.min_aqi_for_xiaomi_auto_speed.state | int) else 'silent' }}"
         
 - alias: "Bedroom: Adjust air purifier speed based on air quality"
   trigger:
@@ -638,15 +647,15 @@
   # or instantly if certain value reached
     - platform: template
       value_template: "{{ states.sensor.xiaomi_bedroom_aqi.state | float >= states.input_number.min_aqi_for_xiaomi_instant_speed_change.state | float }}"
-  condition:
-    - condition: state
-      entity_id: input_boolean.nobody_home
-      state: 'off'
   action:
+    ## change speed from silent to auto and back only if someone home and needed (to avoid setting it when needed as it will turn on purifier)
+    - condition: template
+      value_template: "{{ states.input_boolean.nobody_home.state == 'off' and ((states.sensor.xiaomi_bedroom_aqi.state | float >= states.input_number.min_aqi_for_xiaomi_auto_speed.state | float and states.sensor.xiaomi_bedroom_mode.state == 'silent') or (states.sensor.xiaomi_bedroom_aqi.state | float < states.input_number.min_aqi_for_xiaomi_auto_speed.state | float and states.sensor.xiaomi_bedroom_mode.state != 'silent')) }}"
+      
     - service: fan.set_speed
       data_template:
         entity_id: fan.bedroom_xiaomi
-        speed: "{{ 'auto' if (states.sensor.xiaomi_bedroom_aqi.state | int > states.input_number.min_aqi_for_xiaomi_auto_speed.state | int) else 'silent' }}"
+        speed: "{{ 'auto' if (states.sensor.xiaomi_bedroom_aqi.state | int >= states.input_number.min_aqi_for_xiaomi_auto_speed.state | int) else 'silent' }}"
         
 - alias: "Kids room: Adjust air purifier speed based on air quality"
   trigger:
@@ -656,15 +665,16 @@
   # or instantly if certain value reached
     - platform: template
       value_template: "{{ states.sensor.xiaomi_kidsroom_aqi.state | float >= states.input_number.min_aqi_for_xiaomi_instant_speed_change.state | float }}"
-  condition:
-    - condition: state
-      entity_id: input_boolean.nobody_home
-      state: 'off'
   action:
+    ## change speed from silent to auto and back only if someone home and needed (to avoid setting it when needed as it will turn on purifier)
+    - condition: template
+      value_template: "{{ states.input_boolean.nobody_home.state == 'off' and ((states.sensor.xiaomi_kidsroom_aqi.state | float >= states.input_number.min_aqi_for_xiaomi_auto_speed.state | float and states.sensor.xiaomi_kidsroom_mode.state == 'silent') or (states.sensor.xiaomi_kidsroom_aqi.state | float < states.input_number.min_aqi_for_xiaomi_auto_speed.state | float and states.sensor.xiaomi_kidsroom_mode.state != 'silent')) }}"
+      
     - service: fan.set_speed
       data_template:
         entity_id: fan.kidsroom_xiaomi
-        speed: "{{ 'auto' if (states.sensor.xiaomi_kidsroom_aqi.state | int > states.input_number.min_aqi_for_xiaomi_auto_speed.state | int) else 'silent' }}"
+        speed: "{{ 'auto' if (states.sensor.xiaomi_kidsroom_aqi.state | int >= states.input_number.min_aqi_for_xiaomi_auto_speed.state | int) else 'silent' }}"
+
         
 - alias: "Playroom: Adjust air purifier speed based on air quality"
   trigger:
@@ -674,15 +684,15 @@
   # or instantly if certain value reached
     - platform: template
       value_template: "{{ states.sensor.xiaomi_playroom_aqi.state | float >= states.input_number.min_aqi_for_xiaomi_instant_speed_change.state | float }}"
-  condition:
-    - condition: state
-      entity_id: input_boolean.nobody_home
-      state: 'off'
   action:
+    ## change speed from silent to auto and back only if someone home and needed (to avoid setting it when needed as it will turn on purifier)
+    - condition: template
+      value_template: "{{ states.input_boolean.nobody_home.state == 'off' and ((states.sensor.xiaomi_playroom_aqi.state | float >= states.input_number.min_aqi_for_xiaomi_auto_speed.state | float and states.sensor.xiaomi_playroom_mode.state == 'silent') or (states.sensor.xiaomi_playroom_aqi.state | float < states.input_number.min_aqi_for_xiaomi_auto_speed.state | float and states.sensor.xiaomi_playroom_mode.state != 'silent')) }}"
+      
     - service: fan.set_speed
       data_template:
         entity_id: fan.playroom_xiaomi
-        speed: "{{ 'auto' if (states.sensor.xiaomi_playroom_aqi.state | int > states.input_number.min_aqi_for_xiaomi_auto_speed.state | int) else 'silent' }}"
+        speed: "{{ 'auto' if (states.sensor.xiaomi_playroom_aqi.state | int >= states.input_number.min_aqi_for_xiaomi_auto_speed.state | int) else 'silent' }}"
   
 
 # TODO: Add timer trigger and check if actions needed as xiaomi humidifier might get out of sync as it won't change speed if has no water
